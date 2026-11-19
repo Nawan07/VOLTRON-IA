@@ -1,0 +1,1639 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estúdio de Vídeo</title>
+<style>
+:root{--bg:#f5f1ff;--card:#fff;--tx:#1b1b1f;--mu:#6b6b76;--ac:#6d28d9;--bd:#e3e1dc;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121214;--card:#1c1c20;--tx:#f1f0ee;--mu:#9a9aa6;--ac:#a78bfa;--bd:#2c2c33;--on:#111}}
+:root[data-theme="dark"]{--bg:#121214;--card:#1c1c20;--tx:#f1f0ee;--mu:#9a9aa6;--ac:#a78bfa;--bd:#2c2c33;--on:#111}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:14px;display:grid;gap:14px}
+@media(min-width:800px){main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}}
+h1{font-size:20px;margin:0 0 2px}h2{font-size:14px;margin:0 0 8px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px}
+.stage{display:flex;justify-content:center;background:#000;border-radius:10px;padding:6px}
+canvas{max-width:100%;max-height:62vh;border-radius:6px}
+label{display:block;font-size:12px;color:var(--mu);margin:8px 0 3px}
+input,select{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--bd);border-radius:9px;background:var(--bg);color:var(--tx);font:inherit}
+input[type=color]{padding:2px;height:38px}input[type=range]{padding:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;background:var(--ac);color:var(--on);font-weight:600;cursor:pointer}
+button.s{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}button:disabled{opacity:.5}
+.bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.bar button{flex:1}
+.sc{display:grid;grid-template-columns:56px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--bd)}
+.sc:first-of-type{border-top:0}.sc img,.sc video{width:56px;height:56px;object-fit:cover;border-radius:8px;background:#000}
+.sc .m{display:grid;grid-template-columns:1fr 64px;gap:6px}.sc .a{grid-column:1/-1;display:flex;gap:6px}
+.sc .a button{padding:5px 9px;font-size:12px}
+#st{font-size:13px;color:var(--mu);margin-top:8px;min-height:18px}
+.hl{outline:3px solid var(--ac);outline-offset:3px;border-radius:12px}
+#tut{position:fixed;left:0;right:0;bottom:0;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));z-index:50;display:none}
+#tut .box{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+#tut b{display:block;font-size:16px;margin-bottom:4px}#tut p{margin:0 0 10px;color:var(--mu)}
+body.tt{padding-bottom:230px}.help{float:right;padding:6px 12px;font-size:13px}
+body{background:radial-gradient(900px 420px at 0% -5%,rgba(168,85,247,.28),transparent 60%),radial-gradient(800px 420px at 100% 0,rgba(236,72,153,.22),transparent 55%),var(--bg);background-attachment:fixed}
+main{padding:16px;gap:16px}
+h1{font-size:28px;line-height:1.15;margin:0 0 4px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(90deg,#7c3aed,#ec4899 55%,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:0 0 12px;color:var(--mu);font-size:14px}
+.card{border-radius:22px;padding:16px;border:1px solid var(--bd);box-shadow:0 12px 32px rgba(124,58,237,.14)}
+h2{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ac);letter-spacing:.06em}
+h2::before{content:"";width:6px;height:16px;border-radius:4px;background:linear-gradient(180deg,#7c3aed,#ec4899)}
+.stage{background:#0b0b10;border-radius:16px;padding:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 0 0 3px rgba(168,85,247,.28),0 12px 30px rgba(168,85,247,.3)}
+canvas{border-radius:10px}
+input,select{border-radius:12px;padding:11px;border:1.5px solid var(--bd);transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:0;border-color:#a855f7;box-shadow:0 0 0 4px rgba(168,85,247,.2)}
+input[type=range]{accent-color:#a855f7}input[type=checkbox]{accent-color:#a855f7;width:20px!important;height:20px}
+button{color:#fff;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:14px;padding:12px 16px;font-weight:700;box-shadow:0 6px 16px rgba(124,58,237,.35);transition:transform .12s,box-shadow .12s,filter .12s}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}button:active{transform:scale(.97)}
+button.s{background:var(--card);color:var(--tx);border:1.5px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+button.s:hover{border-color:#a855f7}
+#bp,#br{padding:15px 16px;font-size:16px}
+#br{background:linear-gradient(135deg,#f97316,#ec4899 60%,#a855f7);box-shadow:0 8px 22px rgba(236,72,153,.45)}
+#auto{width:100%;padding:16px;font-size:17px;background:linear-gradient(110deg,#7c3aed,#ec4899,#f59e0b,#7c3aed);background-size:250% 100%;animation:sh 4s linear infinite;box-shadow:0 0 0 3px rgba(236,72,153,.25),0 10px 26px rgba(236,72,153,.45)}
+@keyframes sh{to{background-position:-250% 0}}
+.sc,.sc:first-of-type{border:1px solid var(--bd);border-radius:14px;background:var(--bg);padding:10px;margin-top:8px}
+#st{background:var(--bg);border:1px dashed var(--bd);border-radius:12px;padding:8px 12px;margin-top:10px;color:var(--tx);font-weight:500}
+.help{background:var(--card);color:var(--ac);border:1.5px solid var(--ac);box-shadow:none;border-radius:99px;padding:7px 14px}
+#tut .box{border-radius:20px;border:0;box-shadow:0 -4px 0 #a855f7,0 16px 44px rgba(0,0,0,.4)}
+#tut b{font-size:17px}
+.hl{outline:3px solid #ec4899;outline-offset:4px;animation:pu 1.4s ease-in-out infinite}
+@keyframes pu{50%{outline-color:#a855f7}}
+@media(prefers-reduced-motion:reduce){#auto,.hl{animation:none}}
+:root:not(.x){--bg:#f3f3f1;--card:#fff;--tx:#18181b;--mu:#71717a;--ac:#27272a;--bd:#e4e4e0;--on:#fff;--btn:#18181b;--btnt:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]):not(.x){--bg:#0c0c0e;--card:#161618;--tx:#f4f4f5;--mu:#a1a1aa;--ac:#e4e4e7;--bd:#2a2a2e;--on:#111;--btn:#f4f4f5;--btnt:#111}}
+:root[data-theme="dark"]:not(.x){--bg:#0c0c0e;--card:#161618;--tx:#f4f4f5;--mu:#a1a1aa;--ac:#e4e4e7;--bd:#2a2a2e;--on:#111;--btn:#f4f4f5;--btnt:#111}
+body{background:var(--bg)}
+h1{background:none;-webkit-text-fill-color:var(--tx);color:var(--tx);font-weight:800;font-size:26px}
+.card{box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 28px rgba(0,0,0,.06);border-radius:20px}
+h2{color:var(--mu)}h2::before{background:var(--tx)}
+.stage{background:#0a0a0b;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 10px 28px rgba(0,0,0,.25)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--tx);box-shadow:0 0 0 4px rgba(120,120,120,.2)}
+input[type=range],input[type=checkbox]{accent-color:var(--tx)}
+textarea{width:100%;box-sizing:border-box;padding:11px;border:1.5px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit;resize:vertical}
+button{background:var(--btn);color:var(--btnt);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+button.s{background:var(--card);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+button.s:hover{border-color:var(--tx)}
+#br{background:var(--btn);box-shadow:0 8px 22px rgba(0,0,0,.25)}
+#auto,#ia{width:100%;padding:16px;font-size:17px;background:var(--btn);animation:none;box-shadow:0 0 0 3px var(--bd),0 8px 22px rgba(0,0,0,.2)}
+.help{color:var(--tx);border-color:var(--tx)}
+#tut .box{box-shadow:0 -3px 0 var(--tx),0 16px 44px rgba(0,0,0,.35)}
+.hl{outline:3px solid var(--tx);animation:none}
+.tabs{display:flex;gap:8px;max-width:980px;margin:0 auto;padding:12px 16px 0}
+.tabs button{flex:1;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);box-shadow:none}
+.tabs button.on{background:var(--btn);color:var(--btnt);border-color:var(--btn)}
+#ped{grid-template-columns:1fr!important;max-width:680px}
+.pd{border:1px solid var(--bd);border-radius:14px;background:var(--bg);padding:10px 12px;margin-top:8px}
+.pd small{color:var(--mu)}
+.chip{display:inline-block;border:1px solid var(--bd);border-radius:99px;padding:1px 9px;font-size:12px;margin-right:6px;color:var(--mu)}
+#hub,#pj,#tu{grid-template-columns:1fr!important;max-width:680px}
+#mbar{display:none;align-items:center;gap:10px;max-width:980px;margin:0 auto;padding:12px 16px 4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
+#mbar b{flex:1;font-size:17px}#mbar button{padding:8px 14px}
+body.mod #est h1,body.mod #est .sub,body.mod #est .help{display:none}
+.mi{display:flex;align-items:center;gap:14px;padding:12px 4px;border-top:1px solid var(--bd);width:100%;background:none;color:var(--tx);box-shadow:none;text-align:left;border-radius:0;font-weight:400;transform:none!important}
+.mi:first-child{border-top:0}
+.mi i{font-style:normal;display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--bg);border:1px solid var(--bd);font-size:24px;flex:none}
+.mi b{display:block;font-size:17px}.mi span{color:var(--mu);font-size:13px}.mi em{margin-left:auto;color:var(--mu);font-style:normal;font-size:24px}
+.pl{display:flex;gap:8px;flex-wrap:wrap}
+.pl button{flex:none;padding:9px 16px;background:var(--bg);color:var(--tx);border:1.5px solid var(--bd);box-shadow:none}
+.pl button.on{background:var(--btn);color:var(--btnt);border-color:var(--btn)}
+#iaw{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:3}
+#tl{display:flex;gap:6px;overflow-x:auto;padding:4px 0}
+.tc{flex:none;width:64px;text-align:center;font-size:11px;color:var(--mu)}
+.tc img,.tc video{width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid transparent;background:#000;display:block}
+.tc.sel img,.tc.sel video{border-color:var(--tx)}
+.tc.add{height:64px;border:1.5px dashed var(--bd);font-size:26px;background:none;color:var(--mu);box-shadow:none;padding:0}
+.tb{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:4px}
+.tb button{flex:none;min-width:66px;padding:8px 6px;font-size:12px;background:var(--bg);color:var(--tx);border:1.5px solid var(--bd);box-shadow:none;line-height:1.3}
+.tb button.on{background:var(--btn);color:var(--btnt);border-color:var(--btn)}
+details{border-top:1px solid var(--bd);padding:10px 0}summary{cursor:pointer;font-weight:600}details p{color:var(--mu);margin:8px 0 0;font-size:14px}
+@media(max-width:799px){main{grid-template-columns:minmax(0,1fr)}}
+main>section,.card{min-width:0}
+#hub,#pj,#tu,#ped{grid-template-columns:minmax(0,1fr)!important}
+.pill{display:inline-block;background:var(--bg);border:1px solid var(--bd);border-radius:99px;padding:2px 9px;font-size:12px;color:var(--mu)}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:190px;padding:8px;border:1.5px solid var(--bd);border-radius:14px;background:var(--bg)}
+.pg button{padding:0;height:42px;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);box-shadow:none;position:relative;border-radius:10px}
+.pg button::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--mu);position:absolute;inset:0;margin:auto}
+.pg button.on{background:var(--btn);border-color:var(--btn)}.pg button.on::after{background:var(--btnt)}
+.tg{display:grid;gap:10px}.tg .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tg .chips{display:flex;gap:8px;flex-wrap:wrap}.tg .chips label{display:flex;gap:6px;align-items:center;margin:0;padding:8px 12px;border:1.5px solid var(--bd);border-radius:999px;color:var(--tx);font-size:14px}
+.tg .chips input{width:auto}.tg textarea{min-height:60px}
+.tg .pl2{border:1.5px solid var(--bd);border-radius:14px;padding:12px;background:var(--bg);display:grid;gap:8px}
+.tg .pl2 h3{margin:0;font-size:16px}.tg .tag{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--btn);color:var(--btnt);font-size:11px;font-weight:600}
+.tg .cr{border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--card);display:grid;gap:6px;font-size:14px}
+.tg .cr b{font-size:14px}.tg .mu{color:var(--mu);font-size:12px}.tg ul{margin:0;padding-left:18px;font-size:14px}
+.tg table{width:100%;border-collapse:collapse;font-size:13px}.tg td,.tg th{padding:6px 4px;border-bottom:1px solid var(--bd);text-align:left}
+.tg .dec{padding:3px 8px;border-radius:8px;font-weight:600;font-size:12px;white-space:nowrap}
+.tg .d-p{background:#fee2e2;color:#991b1b}.tg .d-e{background:#dcfce7;color:#166534}.tg .d-t{background:#fef9c3;color:#854d0e}.tg .d-m{background:#e5e7eb;color:#374151}
+
+body{background:radial-gradient(1000px 520px at 8% -10%,rgba(120,120,132,.15),transparent 60%),radial-gradient(900px 520px at 100% 0,rgba(150,140,125,.13),transparent 55%),var(--bg);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(rgba(127,127,127,.17) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 85%);mask-image:linear-gradient(180deg,#000,transparent 85%)}
+#hmb{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:49;padding:9px 14px;font-size:13px;border-radius:99px}
+body.hm #hmb{outline:3px solid var(--tx)}body.hm button,body.hm select,body.hm input,body.hm textarea,body.hm summary{cursor:help}
+#hall p{margin:6px 0;font-size:14px;color:var(--tx)}#hall b{display:inline}
+#cli{grid-template-columns:minmax(0,1fr)!important;max-width:680px}#csend{display:none}body.cm #csend{display:inline-block}body.cm #cgobtn,body.cm .ag,body.cm #mbar,body.cm #hmb,body.cm #tut{display:none!important}</style></head><body><main id="hub"><section><h1 id="hubh">🎬 Estúdio de Vídeo</h1><p class="sub">Central do aplicativo. Escolha um módulo para começar.</p><div class="card" id="mlist"></div></section></main>
+<div id="mbar"><button class="s" id="mback">‹ Central</button><b id="mt"></b><button class="s" id="mhelp">? Tutorial</button></div>
+<main id="est" style="display:none">
+<section>
+ <div class="card">
+  <button class="s help" id="hb">? Tutorial</button><h1><span style="-webkit-text-fill-color:initial">🎬</span> Estúdio de Vídeo</h1><p class="sub">Crie anúncios e clipes prontos para Reels, TikTok e Stories em poucos minutos.</p>
+  <div class="stage"><canvas id="cv"></canvas></div>
+  <input type="range" id="sl" min="0" max="1000" value="0" style="margin-top:8px">
+  <div class="bar"><button id="bp">▶ Prévia</button><button id="br">⏺ Gerar vídeo</button></div>
+  <div id="st">Adicione fotos ou vídeos para começar.</div>
+  <div id="res"></div>
+ </div>
+</section>
+<section style="display:grid;gap:14px">
+ <div class="card" data-v="ia games"><h2>Criar com IA</h2><label>O que você quer criar?</label><textarea id="req" rows="3" placeholder="Ex.: Uma historinha infantil sobre um gatinho que aprende a nadar. Ou: anúncio de um tênis de corrida com 20% de desconto."></textarea><label>O que evitar (opcional)</label><textarea id="neg" rows="2" placeholder="Ex.: sem violência, sem cores muito escuras"></textarea><div class="row"><div><label>Estilo visual</label><select id="sty"><option>Ilustração plana</option><option>Cartoon colorido</option><option>Minimalista</option><option>Neon noturno</option><option>Aquarela</option><option>Pixel art</option></select></div><div><label>Imagem inicial (opcional)</label><input type="file" id="sf" accept="image/*"></div></div><label>Duração</label><div class="pl" id="pdur"><button data-n="4">20 s</button><button data-n="6" class="on">30 s</button><button data-n="8">40 s</button></div><label>Formato</label><div class="pl" id="par"><button data-f="16:9">16:9</button><button data-f="9:16" class="on">9:16</button><button data-f="1:1">1:1</button></div><div class="row"><div><label>Tipo de vídeo</label><select id="kind"><option value="anuncio">Anúncio de produto</option><option value="historia">Historinha</option><option value="explicativo">Explicativo / aula</option><option value="evento">Divulgação de evento</option><option value="depoimento">Depoimento / avaliação</option><option value="frases">Frases motivacionais</option><option value="gameplay">Gameplay / melhores momentos</option></select></div><div><label>Tom</label><select id="tone"><option>Alegre</option><option>Profissional</option><option>Divertido</option><option>Emocionante</option></select></div></div><div class="row"><div><label>Cenas</label><select id="nsc"><option>4</option><option selected>5</option><option>6</option><option>8</option></select></div><div><label>Boneco de IA</label><select id="avatar"><option value="none">Sem boneco</option><option value="pessoa">Pessoa</option><option value="mulher">Mulher</option><option value="crianca">Criança</option><option value="vovo">Vovô</option><option value="astronauta">Astronauta</option><option value="robo">Robô</option><option value="alien">Alien</option><option value="gato">Gatinho</option><option value="cachorro">Cachorro</option><option value="panda">Panda</option></select></div></div><div class="bar" id="iaw"><button id="ia">✨ Criar vídeo com IA</button></div><div style="font-size:12px;color:var(--mu);margin-top:8px">Para criar a partir de uma imagem, adicione suas fotos em Cenas antes de tocar no botão.</div></div>
+ <div class="card" data-v="anuncios config"><h2>1 · Tipo e formato</h2>
+  <div class="row"><div><label>Tipo</label><select id="mode"><option value="ad">Anúncio de produto</option><option value="clip">Clipe / slideshow</option></select></div>
+  <div><label>Formato</label><select id="fmt"><option value="9:16">9:16 · Reels, TikTok, Stories</option><option value="1:1">1:1 · Feed</option><option value="16:9">16:9 · YouTube, site</option></select></div></div>
+  <div id="adf"><div class="row"><div><label>Modelo do anúncio</label><select id="tpl"><option value="classico">Clássico</option><option value="oferta">Oferta (vermelho e amarelo)</option><option value="minimal">Minimalista</option><option value="luxo">Luxo (preto e dourado)</option></select></div><div><label>Logo da marca</label><input type="file" id="logo" accept="image/*"></div></div>
+   <div class="row"><div><label>Produto / marca</label><input id="prod" placeholder="Ex.: Tênis Aurora"></div><div><label>Preço</label><input id="price" placeholder="Ex.: R$ 199"></div></div>
+   <div class="row"><div><label>Chamada final (CTA)</label><input id="cta" value="Compre agora"></div><div><label>Cor da marca</label><input id="col" type="color" value="#374151"></div></div>
+  </div>
+ </div>
+ <div class="card" data-v="personagens"><h2>Personagens IA</h2><div class="pl" id="pav"><button data-a="none" class="on">Sem boneco</button><button data-a="pessoa">🧑 Pessoa</button><button data-a="mulher">👩 Mulher</button><button data-a="crianca">🧒 Criança</button><button data-a="vovo">👴 Vovô</button><button data-a="astronauta">👨‍🚀 Astronauta</button><button data-a="robo">🤖 Robô</button><button data-a="alien">👽 Alien</button><button data-a="gato">🐱 Gatinho</button><button data-a="cachorro">🐶 Cachorro</button><button data-a="panda">🐼 Panda</button></div><label>Cor da roupa e dos destaques</label><input type="color" id="pcol" value="#374151"><div style="font-size:12px;color:var(--mu);margin-top:8px">O boneco mexe a cabeça, os braços e a boca enquanto fala o texto da cena. Escolha abaixo onde ele fica, o tamanho e em quais cenas aparece.</div>
+<div class="row"><div><label>Cor da pele</label><input type="color" id="skin" value="#f1c9a5"></div><div><label>Cor do cabelo</label><input type="color" id="hair" value="#3b2a20"></div></div>
+<h2 style="margin-top:18px">Posição e presença do boneco</h2>
+<label>Onde o boneco fica na tela</label>
+<div class="pg" id="pgrid"><button data-p="tl" title="Em cima, esquerda"></button><button data-p="tc" title="Em cima, centro"></button><button data-p="tr" title="Em cima, direita"></button><button data-p="ml" title="Meio, esquerda"></button><button data-p="mc" title="Meio, centro"></button><button data-p="mr" title="Meio, direita"></button><button data-p="bl" title="Embaixo, esquerda"></button><button data-p="bc" title="Embaixo, centro" class="on"></button><button data-p="br" title="Embaixo, direita"></button></div>
+<input type="hidden" id="avpos" value="bc">
+<label>Tamanho: <span id="avszv">80%</span></label><input type="range" id="avsz" min="40" max="140" value="80">
+<label>Opacidade: <span id="avopv">100%</span></label><input type="range" id="avop" min="30" max="100" value="100">
+<label>Quando o boneco aparece</label><select id="avmode"><option value="all">Em todas as cenas</option><option value="marked">Só nas cenas que eu marcar</option><option value="talk">Só nas cenas que têm texto (quando fala)</option></select>
+<label>Movimento e gestos</label><select id="avgest"><option value="0">Parado</option><option value="1">Suave</option><option value="2" selected>Natural (mexe mãos e cabeça)</option><option value="3">Bem animado</option></select>
+<label style="display:flex;gap:8px;align-items:center;margin:10px 0 4px"><input type="checkbox" id="avwave" style="width:auto" checked>Acenar ao entrar em cena</label>
+<div class="bar"><button class="s" id="avtest">▶ Ver o boneco em ação</button></div>
+<div style="font-size:12px;color:var(--mu);margin-top:8px">Para escolher em quais cenas ele aparece, use a caixa “Boneco nesta cena” na lista de Cenas ou a ferramenta 🧑 Boneco no Editor. Lá você também muda a posição só daquela cena.</div>
+<label style="display:flex;gap:8px;align-items:center;margin:12px 0 4px"><input type="checkbox" id="anar" style="width:auto">Boneco narra as cenas sozinho (voz do aparelho)</label>
+<label style="display:flex;gap:8px;align-items:center;margin:4px 0"><input type="checkbox" id="fitdur" style="width:auto" checked>Ajustar a duração da cena ao tempo da fala</label>
+<label>Estilo de voz</label><select id="vstyle"><option value="auto">Automático (combina com o boneco)</option><option value="fem">Feminina</option><option value="masc">Masculina</option><option value="inf">Infantil</option><option value="grave">Grave</option><option value="aguda">Aguda</option><option value="robo">Robótica</option><option value="alegre">Alegre e animada</option><option value="calma">Calma e lenta</option></select>
+<div class="row"><div><label>Voz</label><select id="vsel"><option value="">Automática</option></select></div><div><label>Velocidade</label><select id="vrate"><option value="0.8">Devagar</option><option value="1" selected>Normal</option><option value="1.2">Rápida</option></select></div></div>
+<div style="font-size:12px;color:var(--mu);margin-top:6px">★ marca as vozes mais naturais do seu aparelho. No iPhone: Ajustes › Acessibilidade › Conteúdo Falado › Vozes, e baixe uma voz Aprimorada ou Premium. No Android e no Chrome, as vozes Google e Microsoft online soam melhor.</div><h2 style="margin-top:18px">Voz realista (opcional)</h2>
+<label>Serviço de voz</label><select id="vprov"><option value="device">Voz do aparelho (grátis)</option><option value="openai">OpenAI · vozes realistas</option><option value="eleven">ElevenLabs · vozes realistas</option></select>
+<div id="cloudbox" style="display:none">
+<label>Chave de acesso (API key)</label><input type="password" id="vkey" placeholder="Cole sua chave aqui" autocomplete="off">
+<label>Voz do serviço</label><select id="vcv"></select>
+<div class="bar"><button class="s" id="vload">Carregar minhas vozes</button><button class="s" id="vctest">🔊 Testar voz realista</button><button class="s" id="vkclr">Apagar chave</button></div>
+<div id="cmsg" style="font-size:12px;color:var(--mu);margin-top:6px;min-height:16px"></div>
+<div style="font-size:12px;color:var(--mu);margin-top:4px">A chave fica salva só neste aparelho e é enviada direto ao serviço escolhido (cobrança na sua conta nele). Não compartilhe este app com a chave salva. A voz realista entra no arquivo do vídeo e faz a boca do boneco acompanhar o som. Se der erro, o app volta sozinho para a voz do aparelho.</div>
+</div>
+<label>Fazer o boneco falar o que eu escrever</label><textarea id="say" rows="2" placeholder="Escreva aqui e toque em Falar"></textarea>
+<div class="bar"><button id="vtest" class="s">🔊 Testar voz</button><button id="saybtn">🗣 Falar</button><button class="s" id="sayadd">＋ Cena com este texto</button></div>
+<div id="saymsg" style="font-size:12px;color:var(--mu);margin-top:6px;min-height:16px"></div></div>
+ <div class="card" data-v="editor"><h2>Linha do tempo</h2><div id="tl"></div><div id="qp" style="margin-top:8px"></div><div class="tb" id="tb"><button data-q="texto" class="on">Aa<br>Texto</button><button data-q="recorte">✂<br>Recorte</button><button data-q="audio">♪<br>Áudio</button><button data-q="voz">🎙<br>Voz</button><button data-q="legenda">CC<br>Legendas</button><button data-q="logo">▣<br>Logo</button><button data-q="boneco">🧑<br>Boneco</button><button data-q="ordem">⇄<br>Ordem</button></div></div>
+ <div class="card" data-v="voz"><h2>Tradução dos textos</h2><div class="row"><div><label>Traduzir para</label><select id="tlang"><option>Inglês</option><option>Espanhol</option><option>Francês</option><option>Italiano</option><option>Alemão</option><option>Português do Brasil</option></select></div><div><label>&nbsp;</label><button id="tbtn" style="width:100%">Traduzir</button></div></div><div style="font-size:12px;color:var(--mu);margin-top:8px">Traduz os textos das cenas. A narração em voz alta passa a usar o idioma escolhido.</div></div>
+<div class="card" data-v="voz"><h2>Transcrição de áudio</h2><div style="font-size:12px;color:var(--mu)">Fale no microfone e o app escreve o que você disse. Depois escolha onde usar o texto.</div><div class="row"><div><label>Idioma da fala</label><select id="trlang"><option value="pt-BR">Português (Brasil)</option><option value="en-US">Inglês</option><option value="es-ES">Espanhol</option><option value="fr-FR">Francês</option><option value="it-IT">Italiano</option><option value="de-DE">Alemão</option></select></div><div><label>Enviar o texto para</label><select id="trdest"><option value="split">Cenas (uma frase por cena)</option><option value="scene">Texto de uma cena</option><option value="req">Pedido da IA</option></select></div></div><div id="trsw" style="display:none"><label>Cena</label><select id="trsc"></select></div><div class="bar"><button id="trbtn">🎤 Começar a transcrever</button></div><textarea id="trtxt" rows="4" placeholder="A transcrição aparece aqui. Você pode corrigir antes de usar." style="margin-top:8px"></textarea><div class="bar"><button class="s" id="truse">Usar este texto</button><button class="s" id="trclr">Limpar</button></div><div id="trmsg" style="font-size:12px;color:var(--mu);margin-top:6px;min-height:16px"></div></div>
+ <div class="card" data-v="config"><h2>Dados deste aparelho</h2><p class="sub" style="margin:0 0 8px">A marca (logo, cor, nome e chamada final) fica salva aqui.</p><button class="s" id="atest" style="width:100%;margin-bottom:8px">🧪 Testar se tudo funciona neste aparelho</button><div id="atout" style="font-size:14px;margin-bottom:8px"></div><button class="s" id="clr" style="width:100%">Apagar marca, pedidos e projetos salvos</button><div id="cfm" style="font-size:13px;color:var(--mu);margin-top:8px"></div></div>
+ <div class="card" data-v="ia editor anuncios personagens games voz"><h2>2 · Cenas</h2>
+  <div class="bar" style="margin-top:0"><button class="s" id="addb">+ Fotos / vídeos</button><button class="s" id="musb">♪ Música</button></div>
+  <input type="file" id="fi" accept="image/*,video/*,.mp4,.mov,.m4v,.webm,.mkv,.3gp,.heic" multiple hidden><input type="file" id="mi" accept="audio/*" hidden>
+  <div class="bar" style="margin-top:8px"><button id="auto">✨ Fazer tudo sozinho</button></div><div id="mn" style="margin-top:6px"></div><div style="margin-top:6px"><label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="cap" style="width:auto">Texto em estilo legenda</label><label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="nar" style="width:auto">Narrar os textos em voz alta (só na prévia)</label><label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="mic" style="width:auto">Gravar minha voz junto ao gerar o vídeo</label><label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="vsnd" style="width:auto">Manter o som dos meus vídeos (gameplay e gravações de tela)</label><label>Ajuste do vídeo na tela</label><select id="fit"><option value="cover">Preencher a tela (corta as bordas)</option><option value="fit">Caber inteiro com fundo desfocado (ideal para gameplay)</option></select></div>
+  <div id="list"></div>
+ </div>
+</section>
+</main>
+<main id="trf" style="display:none"><section class="tg">
+<div class="card"><h2>🚀 Piloto automático</h2><p class="sub" style="margin:0 0 8px">Cole o pedido do cliente. A IA preenche a ficha, monta o plano, cria todos os vídeos e publica.</p><textarea id="tcreq" rows="4" placeholder="Ex.: Studio Bella, estética em Campinas, quer lotar a agenda de limpeza de pele com 30% off. Verba R$ 1.500/mês, WhatsApp (19) 99999-0000"></textarea><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="tcgo" style="width:auto">Ativar os anúncios assim que criar (gasta verba de verdade)</label><div class="bar"><button id="tcauto">🚀 Criar e publicar tudo</button><button class="s" id="tcpub2">📤 Só publicar o plano atual</button></div><div id="tcprog" class="mu" style="margin-top:8px;white-space:pre-wrap"></div></div>
+<div class="card"><h2>🔌 Conexões de publicação</h2><p class="sub" style="margin:0 0 8px">Meta publica direto pela API. Google e TikTok recebem pacote pronto. O webhook (Make, Zapier, n8n) publica em qualquer rede.</p><label>Meta · token de acesso</label><input id="mtok" type="password" autocomplete="off" placeholder="Token com permissão ads_management"><div class="r2"><div><label>Conta de anúncios</label><input id="mact" placeholder="act_123456789"></div><div><label>ID da página do Facebook</label><input id="mpg" placeholder="1234567890"></div></div><div class="r2"><div><label>Idade mínima</label><input id="mage1" type="number" value="18"></div><div><label>Idade máxima</label><input id="mage2" type="number" value="65"></div></div><label>Cidades (separe por vírgula; vazio = Brasil todo)</label><input id="mcity" placeholder="Campinas, Valinhos"><label>Webhook (opcional)</label><input id="mhook" placeholder="https://hook.make.com/…"><div class="bar"><button class="s" id="msave">Salvar conexões</button><button class="s" id="mtest">Testar conexão</button></div><div id="mmsg" class="mu"></div><div class="mu">Os dados ficam só neste aparelho. Sem token, o piloto cria plano e vídeos e entrega o pacote para publicar.</div></div>
+<div class="card"><h2>👥 Clientes da agência</h2>
+<label>Cliente</label><select id="tcsel"></select>
+<div class="bar"><button class="s" id="tcnew">+ Novo cliente</button><button class="s" id="tcdel">Excluir</button></div>
+<div class="r2"><div><label>Nome do cliente</label><input id="tcn" placeholder="Ex.: Studio Bella"></div><div><label>Nicho</label><input id="tcnicho" placeholder="Ex.: estética, pizzaria, advogado"></div></div>
+<label>O que vender / divulgar (oferta)</label><textarea id="tcof" rows="2" placeholder="Ex.: Limpeza de pele com 30% off no primeiro atendimento"></textarea>
+<div class="r2"><div><label>Público e região</label><input id="tcpub" placeholder="Ex.: mulheres 25-45, Campinas"></div><div><label>Link ou WhatsApp</label><input id="tcurl" placeholder="https://… ou (19) 9…"></div></div>
+<div class="r2"><div><label>Verba mensal (R$)</label><input id="tcbud" type="number" inputmode="decimal" value="1500"></div><div><label>Objetivo</label><select id="tcobj"><option>Vendas</option><option>Leads (WhatsApp/formulário)</option><option>Tráfego para o site</option><option>Reconhecimento de marca</option></select></div></div>
+<label>Onde anunciar</label><div class="chips" id="tcpl"><label><input type="checkbox" value="Meta" checked>Meta</label><label><input type="checkbox" value="TikTok" checked>TikTok</label><label><input type="checkbox" value="Google" checked>Google/YouTube</label></div>
+<label>Diferenciais e o que evitar</label><textarea id="tcdif" rows="2" placeholder="Ex.: 10 anos de experiência; não prometer resultado garantido"></textarea>
+<label>Ticket médio / margem (R$, opcional)</label><input id="tcpr" type="number" inputmode="decimal" placeholder="Ex.: 120">
+</div>
+<div class="card"><h2>🤖 Plano de campanha com IA</h2><p class="sub" style="margin:0 0 8px">A IA monta estrutura, públicos, verba por plataforma, textos, palavras-chave e os roteiros dos vídeos.</p>
+<label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="tcav" checked style="width:auto">Incluir boneco apresentador falando nos vídeos</label>
+<div class="bar"><button id="tcgen">✨ Gerar plano completo</button></div><div id="tcst" class="mu" style="margin-top:8px"></div></div>
+<div id="tcplan"></div><div id="trev"></div>
+<div class="card"><h2>📊 Otimização e relatório</h2><p class="sub" style="margin:0 0 8px">Cole os resultados dos anúncios (um por linha, separados por ponto e vírgula) e receba as decisões: pausar, escalar ou testar.</p>
+<textarea id="tmet" rows="5" placeholder="nome;gasto;impressoes;cliques;conversoes;receita&#10;Reels depoimento;120;15000;210;6;720&#10;Story oferta;95;9000;60;0;0"></textarea>
+<div class="bar"><button id="topt">Analisar resultados</button><button class="s" id="trel">📝 Relatório para o cliente</button><button class="s" id="tpull">⬇ Puxar da Meta</button></div>
+<div id="tout" style="margin-top:10px"></div></div>
+</section></main>
+<main id="ped" style="display:none"><section style="display:grid;gap:14px"><div class="card"><h2>Pedir uma novidade</h2><p class="sub" style="margin:0 0 8px">Conte o que você quer ver no app. Os pedidos aparecem na lista abaixo.</p><div class="row"><div><label>Categoria</label><select id="pcat"><option>Nova função</option><option>Modelo ou estilo de vídeo</option><option>Boneco ou personagem</option><option>Gameplay e gravação de tela</option><option>Problema ou erro</option><option>Outro</option></select></div><div><label>Seu aparelho</label><select id="pdev"><option>iPhone</option><option>Android</option><option>Computador</option><option>Tablet</option></select></div></div><label>Descreva o pedido</label><textarea id="ptx" rows="4" placeholder="Ex.: Quero um boneco de astronauta e um modelo de anúncio para Black Friday."></textarea><div class="bar"><button id="psend">Enviar pedido</button><button class="s" id="pcopy">Copiar lista</button></div><div id="pst" style="font-size:13px;color:var(--mu);margin-top:8px"></div></div><div class="card"><h2>Pedidos</h2><div id="plist"></div></div></section></main>
+<main id="pj" style="display:none"><section style="display:grid;gap:14px"><div class="card"><h2>Salvar projeto</h2><label>Nome do projeto</label><input id="pjn" placeholder="Ex.: Anúncio do tênis"><div class="bar"><button id="pjs">Salvar projeto atual</button></div><div id="pjm" style="font-size:12px;color:var(--mu);margin-top:8px">Salva textos, cenas criadas pela IA e configurações neste aparelho. Fotos e vídeos da galeria precisam ser adicionados de novo.</div></div><div class="card"><h2>Meus projetos</h2><div id="pjl"></div></div></section></main>
+<main id="tu" style="display:none"><section><div class="card"><h2>Central de tutoriais</h2><div class="bar" style="margin-top:0"><button id="tustart">▶ Tour guiado do app</button></div><details><summary>Como criar um vídeo só com um texto?</summary><p>Abra Criar com IA, escreva o pedido, escolha tipo, duração e formato e toque em Criar vídeo com IA. Depois veja a prévia, ajuste no Editor e gere o vídeo.</p></details><details><summary>Como criar a partir de uma imagem?</summary><p>Adicione as imagens em Cenas (ou use Imagem inicial) e toque em Criar vídeo com IA. A IA escreve o texto de cada imagem.</p></details><details><summary>Como usar gravação de tela de jogo?</summary><p>Abra Games e gameplay, adicione o vídeo da galeria, marque Manter o som e use o ajuste com fundo desfocado se o vídeo for deitado.</p></details><details><summary>Como editar cortes, texto e áudio?</summary><p>No Editor de vídeos, toque numa cena da linha do tempo e use as ferramentas: texto, recorte, áudio, voz, legendas, logo e ordem.</p></details><details><summary>Como salvar o vídeo final?</summary><p>Toque em Gerar vídeo, deixe a tela aberta até o fim (a gravação é em tempo real) e toque em Salvar vídeo.</p></details><details><summary>📘 Guia de todos os botões</summary><div id="hall"></div></details><details><summary>🚀 Como usar o Piloto automático do tráfego?</summary><p>Abra Gestor de Tráfego, cole o pedido do cliente e toque em Criar e publicar tudo. Ele preenche a ficha, gera o plano, grava todos os vídeos e publica. Em Conexões, informe token, conta e página da Meta. Por segurança os anúncios nascem pausados, a menos que você marque Ativar assim que criar.</p></details><details><summary>🔎 O que é o Modo explicar?</summary><p>O botão flutuante 🔎 liga o modo: ao tocar em qualquer botão ou campo, o app explica o que ele faz sem executar a ação.</p></details><details><summary>Posso usar o link de um vídeo?</summary><p>Não. O app não baixa vídeos de YouTube, TikTok ou Instagram. Salve o vídeo na galeria antes e escolha o arquivo.</p></details><details><summary>Voz narrada entra no vídeo?</summary><p>A narração em voz alta toca só na prévia. Para ter voz no arquivo, marque Gravar minha voz ao gerar.</p></details></div></section></main>
+<main id="cli" style="display:none"><section class="tg"><div class="card"><h2>🤝 Portal do cliente</h2><p class="sub" style="margin:0 0 8px">Preencha os dados do negócio. A IA monta o perfil da marca, faz os vídeos e publica.</p>
+<div class="r2"><div><label>Nome do negócio</label><input id="cnm" placeholder="Ex.: Studio Bella"></div><div><label>Ramo</label><input id="cnich" placeholder="Ex.: estética"></div></div>
+<label>O que você quer divulgar?</label><textarea id="cof" rows="2" placeholder="Ex.: Limpeza de pele com 30% off no primeiro atendimento"></textarea>
+<div class="r2"><div><label>Cidade e público</label><input id="cpub" placeholder="Ex.: mulheres 25-45, Campinas"></div><div><label>WhatsApp ou link</label><input id="curl2" placeholder="(19) 9…"></div></div>
+<div class="r2"><div><label>Verba por mês (R$)</label><input id="cbud" type="number" inputmode="decimal" value="1500"></div><div><label>Objetivo</label><select id="cobj"><option>Vendas</option><option>Leads (WhatsApp/formulário)</option><option>Tráfego para o site</option><option>Reconhecimento de marca</option></select></div></div>
+<label>Diferenciais e o que evitar</label><textarea id="cdif" rows="2" placeholder="Ex.: 10 anos de experiência; não prometer resultado garantido"></textarea>
+<div class="r2"><div><label>Cor da marca</label><input id="ccol" type="color" value="#374151"></div><div><label>Logo (opcional)</label><input id="clogo" type="file" accept="image/*"></div></div>
+<label class="ag" style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="cgo" style="width:auto">Ativar os anúncios assim que publicar (gasta verba)</label>
+<label style="display:flex;gap:8px;align-items:flex-start;color:var(--tx);font-size:13px"><input type="checkbox" id="ccons" style="width:auto;margin-top:3px">Concordo que o estúdio use estes dados e minha marca para criar vídeos e anúncios (LGPD). Posso pedir a exclusão a qualquer momento.</label><input id="chp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px" aria-hidden="true"><div class="bar"><button id="cgobtn">🚀 Enviar e criar tudo</button><button id="csend">📨 Enviar meus dados</button></div><div id="cprog" class="mu" style="margin-top:8px;white-space:pre-wrap"></div></div><div id="cperf"></div><div class="card ag"><h2>📥 Pedidos de clientes</h2><p class="sub" style="margin:0 0 8px">Envie este link ao cliente para ele preencher de longe:</p><input id="clink" readonly><div class="bar"><button class="s" id="ccopy">Copiar link</button><button class="s" id="crefresh">Atualizar pedidos</button><button class="s" id="crenew">Renovar acesso</button></div><div id="crecv"></div></div></section></main>
+<div id="tut"><div class="box"><b id="tt"></b><p id="td"></p><div class="bar" style="margin-top:0"><button class="s" id="tbk">Voltar</button><button class="s" id="tx">Pular</button><button id="tn">Próximo</button></div></div></div>
+<script>
+/* ===== CONFIGURAÇÃO DO SERVIDOR (preencha só aqui) ===== */
+const BACKEND={
+ /* Firebase (Firestore + login Google do dono). Cole o objeto do console do Firebase. Ex.: {apiKey:"...",authDomain:"x.firebaseapp.com",projectId:"x",appId:"..."} */
+ firebase:{apiKey:"AIzaSyA8GmE8snbfTlltQVczrqZs-09itrC3XvY",authDomain:"vyron-30dd8.firebaseapp.com",projectId:"vyron-30dd8",storageBucket:"vyron-30dd8.firebasestorage.app",messagingSenderId:"208416502932",appId:"1:208416502932:web:a5d982f114e432a0593081"},
+ /* URL da função de IA (veja LEIA-ME.md). Ex.: "https://us-central1-x.cloudfunctions.net/ia" */
+ aiEndpoint:""
+};
+(function(){
+ const oc=window.claude,V='10.12.5';
+ const load=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+ let dbp=null;
+ async function fb(){
+  if(!BACKEND.firebase)return null;if(dbp)return dbp;
+  dbp=(async()=>{
+   const B='https://www.gstatic.com/firebasejs/'+V+'/firebase-';
+   await load(B+'app-compat.js');await Promise.all([load(B+'auth-compat.js'),load(B+'firestore-compat.js')]);
+   if(!firebase.apps.length)firebase.initializeApp(BACKEND.firebase);
+   const fs=firebase.firestore(),au=firebase.auth();
+   const login=async()=>{if(!au.currentUser)await au.signInWithPopup(new firebase.auth.GoogleAuthProvider())};
+   const wrap=q=>({orderBy:(...a)=>wrap(q.orderBy(...a)),limit:n=>wrap(q.limit(n)),
+    get:async()=>{try{return await q.get()}catch(e){if(e&&e.code==='permission-denied'){await login();return await q.get()}throw e}}});
+   return{collection:n=>{const c=fs.collection(n);return{add:d=>c.add(d),orderBy:(...a)=>wrap(c.orderBy(...a)),limit:n2=>wrap(c.limit(n2))}}};
+  })().catch(e=>{console.warn('Firebase indisponível',e);dbp=null;return null});
+  return dbp}
+ const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(',')[1]);f.readAsDataURL(b)});
+ const SAMPLE={json:async(prompt,o)=>{const images=[];for(const b of((o&&o.images)||[]))images.push(await b64(b));
+  const r=await fetch(BACKEND.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,images})});
+  if(!r.ok)throw new Error('IA respondeu '+r.status);return await r.json()}};
+ const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4e4)}};
+ window.claude={use:async k=>{
+  if(k==='downloads')return DL;
+  if(k==='db'){const d=await fb();if(d)return d}
+  if(k==='sample'&&BACKEND.aiEndpoint)return SAMPLE;
+  if(oc&&oc.use){try{return await oc.use(k)}catch(e){}}
+  return null}};
+ window.aiWhyDefault='A IA ainda não está configurada: preencha aiEndpoint em BACKEND no início do arquivo (veja LEIA-ME.md).';
+})();
+</script>
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv');let ctx=cv.getContext('2d');const mainCtx=ctx;
+const SZ={'9:16':[540,960],'1:1':[720,720],'16:9':[960,540]};
+let scenes=[],music=null,adest=null,actx=null,playing=false,recording=false,t0=0,cur=0,curIdx=0,lastIdx=-1,rec=null,chunks=[],mtype='';
+const CTA_D=2.5;
+const total=()=>scenes.reduce((a,s)=>a+s.dur,0)+($('#mode').value==='ad'&&scenes.length?CTA_D:0);
+const ease=x=>1-Math.pow(1-Math.min(1,Math.max(0,x)),3);
+function setFmt(){const[w,h]=SZ[$('#fmt').value];cv.width=w;cv.height=h;draw(cur)}
+const VEXT=/\.(mp4|m4v|mov|webm|mkv|3gp|3g2|avi|ogv|mpg|mpeg)$/i,IEXT=/\.(jpe?g|png|gif|webp|bmp|avif|heic|heif)$/i;
+const VMIME={mp4:'video/mp4',m4v:'video/mp4',mov:'video/quicktime',webm:'video/webm',mkv:'video/x-matroska','3gp':'video/3gpp','3g2':'video/3gpp2',avi:'video/x-msvideo',ogv:'video/ogg',mpg:'video/mpeg',mpeg:'video/mpeg'};
+function failFile(s,f){
+ const k=scenes.indexOf(s);if(k<0)return;
+ scenes.splice(k,1);try{URL.revokeObjectURL(s.url)}catch(e){}
+ renderList();draw(cur);
+ $('#st').textContent=s.isV?'Não consegui abrir o vídeo "'+f.name+'". Este navegador pode não aceitar o formato (comum em vídeos HEVC/H.265 ou .mkv). Converta para MP4 (H.264) ou grave de novo.':'Não consegui abrir a imagem "'+f.name+'". Se for HEIC, converta para JPG ou PNG.'
+}
+function addFiles(files){
+ let ignored=0;
+ for(const f of files){
+  const ext=((f.name.match(/\.([a-z0-9]+)$/i)||[])[1]||'').toLowerCase();
+  const isI=f.type.startsWith('image')||(!f.type.startsWith('video')&&IEXT.test(f.name));
+  const isV=f.type.startsWith('video')||(!isI&&VEXT.test(f.name));
+  if(!isV&&!isI){ignored++;continue}
+  const blob=(isV&&!f.type)?new Blob([f],{type:VMIME[ext]||'video/mp4'}):f;
+  const url=URL.createObjectURL(blob);
+  const s={isV,el:null,url,head:'',dur:isV?4:3,start:0};
+  let el;
+  if(isV){el=document.createElement('video');el.muted=true;el.loop=true;el.playsInline=true;el.setAttribute('playsinline','');el.setAttribute('webkit-playsinline','');el.preload='auto';
+   el.onloadedmetadata=()=>{try{el.currentTime=Math.min(.05,(el.duration||1)/2)}catch(x){}};
+   el.onloadeddata=()=>{if(el.videoWidth>el.videoHeight&&$('#fmt').value==='9:16')$('#fit').value='fit';draw(cur)};
+   el.onerror=()=>failFile(s,f);
+   el.src=url;try{el.load()}catch(x){}}
+  else{el=new Image();el.onload=()=>draw(cur);el.onerror=()=>failFile(s,f);el.src=url}
+  s.el=el;scenes.push(s)
+ }
+ renderList();draw(cur);
+ if(ignored)$('#st').textContent=ignored+' arquivo(s) ignorado(s): só fotos e vídeos são aceitos.'
+}
+function renderList(){
+ const L=$('#list');L.innerHTML='';
+ scenes.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='sc';
+  const th=document.createElement(s.isV?'video':'img');th.src=s.url+(s.isV?'#t=0.1':'');if(s.isV){th.muted=true;th.playsInline=true;th.preload='metadata'}
+  const m=document.createElement('div');m.className='m';
+  const h=document.createElement('input');h.placeholder=i===0?'Título da cena (opcional)':'Texto da cena';h.value=s.head;h.oninput=()=>{s.head=h.value;draw(cur)};
+  const du=document.createElement('input');du.type='number';du.min=1;du.max=15;du.step=.5;du.value=s.dur;du.title='segundos';du.oninput=()=>{s.dur=Math.max(1,Math.min(15,+du.value||3));draw(cur)};
+  const a=document.createElement('div');a.className='a';
+  const mk=(t,fn)=>{const b=document.createElement('button');b.className='s';b.textContent=t;b.onclick=fn;a.appendChild(b)};
+  mk('↑',()=>{if(i>0){[scenes[i-1],scenes[i]]=[scenes[i],scenes[i-1]];renderList();draw(cur)}});
+  mk('↓',()=>{if(i<scenes.length-1){[scenes[i+1],scenes[i]]=[scenes[i],scenes[i+1]];renderList();draw(cur)}});
+  mk('Remover',()=>{scenes.splice(i,1);renderList();draw(cur)});
+  m.append(h,du);if(s.isV){const lb=document.createElement('label');lb.textContent='Começar o vídeo em (segundos)';lb.style.cssText='grid-column:1/-1;margin:0';const so=document.createElement('input');so.type='number';so.min=0;so.step=.5;so.value=s.start||0;so.style.gridColumn='1/-1';so.oninput=()=>{s.start=Math.max(0,+so.value||0)};m.append(lb,so)}m.append(avBox(s));m.append(a);d.append(th,m);L.appendChild(d)
+ });
+ renderTL();const T=total();$('#st').textContent=scenes.length?`${scenes.length} cena(s) · ${T.toFixed(1)}s`:'Adicione fotos ou vídeos para começar.'
+}
+function cover(el,W,H,zoom,alpha){
+ const w=el.videoWidth||el.naturalWidth,h=el.videoHeight||el.naturalHeight;if(!w||!h)return;
+ ctx.globalAlpha=alpha;
+ if($('#fit').value==='fit'){bgc.width=24;bgc.height=Math.max(1,Math.round(24*H/W));bgx.drawImage(el,0,0,bgc.width,bgc.height);ctx.imageSmoothingEnabled=true;ctx.drawImage(bgc,0,0,W,H);ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);const sc=Math.min(W/w,H/h)*zoom;ctx.drawImage(el,(W-w*sc)/2,(H-h*sc)/2,w*sc,h*sc)}
+ else{const sc=Math.max(W/w,H/h)*zoom;ctx.drawImage(el,(W-w*sc)/2,(H-h*sc)/2,w*sc,h*sc)}
+ ctx.globalAlpha=1
+}
+function wrap(txt,maxW){
+ const out=[];let line='';
+ for(const w of txt.split(/\s+/)){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t}
+ if(line)out.push(line);return out
+}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h);ctx.fill()}
+let logo=null;function drawLogo(W){if(logo&&logo.complete&&logo.naturalWidth){const h=W*.12,w=logo.naturalWidth/logo.naturalHeight*h;ctx.drawImage(logo,W*.04,W*.04,w,h)}}
+function draw(t){
+ const W=cv.width,H=cv.height,tp=$('#tpl').value,cap=$('#cap').checked,ad=$('#mode').value==='ad',col=$('#col').value,prod=$('#prod').value.trim(),price=$('#price').value.trim();
+ ctx.globalAlpha=1;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+ if(!scenes.length){ctx.fillStyle='#888';ctx.textAlign='center';ctx.font=`${W*.045}px system-ui`;ctx.fillText('Adicione fotos ou vídeos',W/2,H/2);return}
+ let acc=0,i=0,lt=0,cta=false;
+ for(i=0;i<scenes.length;i++){if(t<acc+scenes[i].dur){lt=t-acc;break}acc+=scenes[i].dur}
+ if(i>=scenes.length){if(ad){cta=true;lt=t-acc}i=scenes.length-1;if(!ad)lt=scenes[i].dur}
+ curIdx=i;const s=scenes[i];
+ if(cta){
+  ctx.fillStyle=tp==='luxo'?'#111':tp==='oferta'?'#e11d48':col;ctx.fillRect(0,0,W,H);
+  const e=ease(lt/.6);drawLogo(W);ctx.globalAlpha=e;ctx.textAlign='center';ctx.fillStyle='#fff';
+  ctx.font=`800 ${W*.09}px system-ui`;const ls=wrap(prod||'Sua marca',W*.82);
+  ls.forEach((l,k)=>ctx.fillText(l,W/2,H*.42+k*W*.1+(1-e)*30));
+  const txt=$('#cta').value||'Saiba mais';ctx.font=`700 ${W*.055}px system-ui`;
+  const bw=ctx.measureText(txt).width+W*.12,bh=W*.12,by=H*.42+ls.length*W*.1+W*.06;
+  ctx.fillStyle='#fff';rr(W/2-bw/2,by,bw,bh,bh/2);ctx.fillStyle=col;ctx.fillText(txt,W/2,by+bh*.66);
+  if(price){ctx.fillStyle='#fff';ctx.font=`600 ${W*.05}px system-ui`;ctx.fillText(price,W/2,by+bh+W*.1)}
+  ctx.globalAlpha=1;return
+ }
+ const p=lt/s.dur;
+ if(i>0&&lt<.5)paint(scenes[i-1],W,H,1.08,1);
+ paint(s,W,H,1+.08*p,i>0?Math.min(1,lt/.5):1);
+ drawLogo(W);if(ad&&tp==='oferta'){const ry=W*.04+(logo?W*.14:0);ctx.fillStyle='#e11d48';rr(W*.04,ry,W*.27,W*.09,W*.045);ctx.fillStyle='#fff';ctx.font=`800 ${W*.045}px system-ui`;ctx.textAlign='center';ctx.fillText('OFERTA',W*.175,ry+W*.062)}
+ const head=s.head.trim()||(ad&&i===0?prod:'');const av=$('#avatar').value;
+ if(head){
+  if(tp==='minimal'){ctx.fillStyle='rgba(0,0,0,.4)';ctx.fillRect(0,0,W,H)}else{const g=ctx.createLinearGradient(0,H*.5,0,H);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,tp==='oferta'?'rgba(190,18,60,.85)':'rgba(0,0,0,.75)');ctx.fillStyle=g;ctx.fillRect(0,H*.5,W,H*.5)}
+  const e=ease((lt-.15)/.6);ctx.globalAlpha=e;ctx.fillStyle=tp==='luxo'?'#e6c36a':'#fff';ctx.textAlign='center';
+  ctx.font=`800 ${cap?W*.05:W*.075}px ${tp==='luxo'?'Georgia,serif':'system-ui'}`;ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=12;
+  const ls=wrap(head,W*.84),lh=cap?W*.062:W*.09,y0=(tp==='minimal'?H*.5-(ls.length-1)*lh/2:H*.9-(av!=='none'?avShift(s,i,W,H):0)-(ls.length-1)*lh)+(1-e)*40;
+  ls.forEach((l,k)=>{if(cap){ctx.lineWidth=W*.012;ctx.lineJoin='round';ctx.strokeStyle='#000';ctx.strokeText(l,W/2,y0+k*lh)}ctx.fillText(l,W/2,y0+k*lh)});ctx.shadowBlur=0;ctx.globalAlpha=1
+ }
+ if(av!=='none'&&avVisible(s,i))drawAvatar(av,W,H,lt+(playing?0:performance.now()/1000),talkNow(head,lt,s),col,s,i,lt);if(ad&&price){
+  ctx.font=`800 ${W*.05}px system-ui`;const pw=ctx.measureText(price).width+W*.07,ph=W*.1;
+  ctx.fillStyle=tp==='oferta'?'#facc15':tp==='luxo'?'#111':col;rr(W-pw-W*.04,W*.04,pw,ph,ph/2);ctx.fillStyle=tp==='oferta'?'#111':tp==='luxo'?'#e6c36a':'#fff';ctx.textAlign='center';ctx.fillText(price,W-pw/2-W*.04,W*.04+ph*.66)
+ }
+}
+function syncVid(){
+ if(curIdx!==lastIdx){
+  if(scenes[lastIdx]&&scenes[lastIdx].isV)scenes[lastIdx].el.pause();
+  const s=scenes[curIdx];if(s&&s.isV){s.el.currentTime=s.start||0;s.el.play().catch(()=>{})}if(s)sceneNarrate(s,curIdx);
+  lastIdx=curIdx
+ }
+}
+function tick(){
+ if(!playing)return;
+ cur=(performance.now()-t0)/1000;const T=total();
+ if(cur>=T){cur=T;draw(T);stopPlay();if(recording)finishRec();return}
+ draw(cur);syncVid();$('#sl').value=cur/T*1000;requestAnimationFrame(tick)
+}
+function startPlay(){
+ if(!scenes.length)return;
+ unlockTTS();fitDurations();
+ if(actx&&actx.state==='suspended')actx.resume();
+ prepAudio();playing=true;lastIdx=-1;cur=0;t0=performance.now();
+ if(music){music.currentTime=0;music.play().catch(()=>{})}
+ $('#bp').textContent='■ Parar';requestAnimationFrame(tick)
+}
+function stopPlay(){
+ playing=false;if(music)music.pause();stopSpeak();
+ scenes.forEach(s=>s.isV&&s.el.pause());lastIdx=-1;$('#bp').textContent='▶ Prévia'
+}
+$('#bp').onclick=()=>{if(playing){stopPlay();if(recording){recording=false;try{rec.stop()}catch(e){}$('#br').disabled=false}}else startPlayC()};
+$('#sl').oninput=e=>{if(playing)stopPlay();cur=e.target.value/1000*total();draw(cur);const s=scenes[curIdx];if(s&&s.isV){try{s.el.currentTime=s.start||0}catch(e){}}};
+function setMusic(f){
+ const a=new Audio(URL.createObjectURL(f));a.loop=true;a.crossOrigin='anonymous';music=a;
+ try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();adest=adest||actx.createMediaStreamDestination();
+  const src=actx.createMediaElementSource(a);src.connect(adest);src.connect(actx.destination)}catch(e){adest=null}
+ $('#mn').innerHTML='<span class="pill">♪ '+f.name.replace(/</g,'')+'</span>'
+}
+async function record(){
+ if(!scenes.length){$('#st').textContent='Adicione ao menos uma cena.';return}
+ if(!window.MediaRecorder||!cv.captureStream){$('#st').textContent='Este navegador não suporta gravar vídeo.';return}
+ mtype=['video/mp4','video/webm;codecs=vp9,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));
+ if(!mtype){$('#st').textContent='Formato de gravação indisponível neste navegador.';return}
+ if(playing)stopPlay();
+ unlockTTS();
+ if(cloudOn()){ensureAudio();if(actx.state==='suspended')actx.resume();await prepCloud()}
+ prepAudio();const stream=cv.captureStream(30);if($('#mic').checked){try{const ms=await navigator.mediaDevices.getUserMedia({audio:true});micStream=ms;ms.getAudioTracks().forEach(t=>stream.addTrack(t));setupMic(ms)}catch(e){$('#st').textContent='Sem acesso ao microfone; gerando sem a sua voz.'}}
+ if(adest)adest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+ chunks=[];rec=new MediaRecorder(stream,{mimeType:mtype,videoBitsPerSecond:5e6});
+ rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);
+ rec.onstop=()=>{stopMic();if(!chunks.length)return;const ext=mtype.includes('mp4')?'mp4':'webm';
+  const blob=new Blob(chunks,{type:mtype}),u=URL.createObjectURL(blob);window.lastRec={blob,ext,u};
+  $('#res').innerHTML='';const v=document.createElement('video');v.src=u;v.controls=true;v.playsInline=true;v.style.cssText='width:100%;margin-top:10px;border-radius:10px;max-height:60vh';
+  const b=document.createElement('button');b.textContent='⬇ Salvar vídeo (.'+ext+')';b.style.cssText='width:100%;margin-top:8px';
+  b.onclick=async()=>{try{const d=await claude.use('downloads');if(!d){$('#st').textContent='Segure o dedo no vídeo acima para salvar.';return}
+    await d.save({filename:'meu-video.'+ext,data:blob});$('#st').textContent='Vídeo salvo.'}catch(e){if(!e||e.code!=='declined')$('#st').textContent='Não foi possível salvar. Tente segurar o dedo no vídeo.'}};
+  $('#res').append(v,b);$('#st').textContent='Pronto! Seu vídeo foi gerado.';$('#br').disabled=false};
+ $('#br').disabled=true;$('#st').textContent=(speechMode()&&!$('#mic').checked&&!cloudOn())?'Gravando… A voz sintética do boneco toca, mas não entra no arquivo (limite dos navegadores). Marque “Gravar minha voz” para ter voz no vídeo.':'Gravando… aguarde até o fim.';recording=true;rec.start();startPlay()
+}
+function finishRec(){recording=false;setTimeout(()=>{try{rec.stop()}catch(e){}},200)}
+$('#br').onclick=record;
+$('#addb').onclick=()=>$('#fi').click();$('#musb').onclick=()=>$('#mi').click();
+$('#fi').onchange=e=>{addFiles([...e.target.files]);e.target.value=''};
+$('#mi').onchange=e=>{if(e.target.files[0])setMusic(e.target.files[0]);e.target.value=''};
+['fmt','mode','prod','price','cta','col'].forEach(id=>$('#'+id).addEventListener('input',()=>{if(id==='fmt')setFmt();else{if(id==='mode')$('#adf').style.display=$('#mode').value==='ad'?'':'none';renderList();draw(cur)}}));
+setFmt();
+const TS_OLD=[
+[()=>$('#mode').closest('.card'),'1 · Escolha o tipo e o formato','Anúncio de produto mostra preço e uma chamada final. Clipe é um slideshow simples. Use 9:16 para Reels, TikTok e Stories.'],
+[()=>$('#adf'),'2 · Dados do produto','Só no modo anúncio: escreva o nome, o preço e o texto do botão final (ex.: Compre agora). Escolha a cor da sua marca.'],
+[()=>$('#addb'),'3 · Adicione fotos e vídeos','Toque aqui e escolha vários de uma vez. Cada um vira uma cena.'],
+[()=>$('#list'),'4 · Ajuste as cenas','Escreva um texto curto em cada cena, mude a duração em segundos e use as setas para trocar a ordem.'],
+[()=>$('#musb'),'5 · Música (opcional)','Escolha um áudio do seu aparelho para tocar durante o vídeo.'],
+[()=>$('#bp'),'6 · Veja a prévia','Toque em Prévia para assistir antes de gerar. Você também pode arrastar a barra para ver qualquer momento.'],
+[()=>$('#br'),'7 · Gere e salve','Toque em Gerar vídeo e aguarde até o fim, sem sair da tela. Depois toque em Salvar vídeo.'],
+[()=>$('#auto'),'Atalho automático','Já colocou suas fotos e vídeos? Toque em Fazer tudo sozinho: o app divide vídeos longos, escreve os textos e escolhe o modelo do anúncio.']
+];
+const TS_OLD2=[
+[()=>document.querySelector('h1'),'Bem-vindo! Veja como é fácil','Em 3 passos: 1) coloque suas fotos e vídeos, 2) toque em Fazer tudo sozinho, 3) gere e salve o vídeo. Vamos passo a passo. Toque em Próximo.'],
+[()=>$('#addb'),'Passo 1 · Coloque suas fotos e vídeos','Toque aqui e escolha os arquivos da galeria do seu aparelho. Pode marcar vários de uma vez. Cada um vira uma cena do vídeo.'],
+[()=>$('#auto'),'Passo 2 · Deixe o app fazer o resto','Toque em Fazer tudo sozinho. O app olha suas cenas, escreve um título para cada uma, escolhe o modelo do anúncio e a chamada final. Se você colocou só um vídeo longo, ele corta em várias cenas. Espere a mensagem Pronto.'],
+[()=>$('#mode').closest('.card'),'Passo 3 · Escolha o tipo e o formato','Anúncio de produto mostra preço e botão final. Clipe é um slideshow simples. Formato 9:16 serve para Reels, TikTok e Stories; 1:1 para o feed; 16:9 para YouTube e sites.'],
+[()=>$('#adf'),'Passo 4 · Dados do produto (anúncio)','Escreva o nome, o preço e o texto do botão final, como Compre agora. Escolha um modelo e envie o logo da sua marca. O logo, a cor e os textos ficam salvos neste aparelho.'],
+[()=>$('#list'),'Passo 5 · Ajuste cada cena','Edite o texto de cada cena, mude a duração em segundos e troque a ordem com as setas. Nos vídeos, use Começar o vídeo em para escolher o trecho que entra.'],
+[()=>$('#musb'),'Passo 6 · Música e voz (opcional)','Escolha uma música do aparelho. Marque Gravar minha voz para narrar enquanto o vídeo é gerado. A opção Narrar em voz alta toca só na prévia, não entra no arquivo.'],
+[()=>$('#bp'),'Passo 7 · Veja a prévia','Toque em Prévia para assistir antes de gerar. Se algo não ficou bom, volte e ajuste.'],
+[()=>$('#br'),'Passo 8 · Gere e salve','Toque em Gerar vídeo e deixe a tela aberta até o fim: o vídeo é gravado em tempo real. Depois toque em Salvar vídeo.'],
+[()=>$('#addb'),'Importante · Vídeos de links','Este app não consegue baixar vídeos de links do YouTube, TikTok ou Instagram. Salve o vídeo na galeria do celular antes e depois escolha em Fotos e vídeos. Você pode reabrir este guia no botão Tutorial.']
+];
+const TS_OLD3=[
+[()=>document.querySelector('h1'),'Bem-vindo! Veja como é fácil','Você diz o que quer e o app monta o vídeo: anúncios, historinhas, aulas e mais, com ilustrações e um boneco que fala. Toque em Próximo.'],
+[()=>$('#req'),'Passo 1 · Escreva o pedido','Descreva o vídeo que o cliente quer, com suas palavras. Pode ser uma historinha, um anúncio, uma aula, um convite. Quanto mais detalhe, melhor.'],
+[()=>$('#kind').closest('.row'),'Passo 2 · Tipo e tom','Escolha o tipo de vídeo e o tom da fala: alegre, profissional, divertido ou emocionante.'],
+[()=>$('#avatar').closest('.row'),'Passo 3 · Cenas e boneco de IA','Defina quantas cenas quer e escolha um boneco: pessoa, robô ou gatinho. Ele aparece na tela e mexe a boca enquanto o texto da cena está no ar.'],
+[()=>$('#ia'),'Passo 4 · Criar com IA','Toque aqui e espere. A IA escreve o roteiro e cria as ilustrações de cada cena. Na primeira vez, o app pede sua permissão.'],
+[()=>$('#addb'),'Ou parta de imagens','Adicione fotos ou vídeos da galeria antes de tocar em Criar com IA. A IA olha cada imagem e escreve o texto que combina com ela.'],
+[()=>$('#mode').closest('.card'),'Passo 5 · Formato e anúncio','Escolha o formato (9:16 para Reels, TikTok e Stories) e, se for anúncio, confira nome, preço, modelo e logo.'],
+[()=>$('#list'),'Passo 6 · Ajuste as cenas','Edite qualquer texto, mude a duração e troque a ordem com as setas.'],
+[()=>$('#musb'),'Passo 7 · Música e voz (opcional)','Escolha uma música do aparelho. Marque Gravar minha voz para narrar durante a geração. Narrar em voz alta toca só na prévia e não entra no arquivo.'],
+[()=>$('#bp'),'Passo 8 · Veja a prévia','Assista antes de gerar. Se algo não ficou bom, volte e ajuste.'],
+[()=>$('#vsnd').closest('.card'),'Gameplay e gravações de tela','Adicione sua gravação de tela como qualquer vídeo. Marque Manter o som dos meus vídeos para levar o áudio do jogo. Em vídeo deitado, use Caber inteiro com fundo desfocado para não cortar a imagem. Use Começar o vídeo em para pegar o melhor momento.'],
+[()=>$('#br'),'Passo 9 · Gere e salve','Toque em Gerar vídeo e deixe a tela aberta até o fim. Depois toque em Salvar vídeo.'],
+[()=>document.querySelector('#tabp')||$('#br'),'Aba Pedidos','Quer uma função nova, um modelo ou encontrou um problema? Toque em Pedidos, escreva e envie. Se o envio não estiver disponível para você, o pedido fica salvo no aparelho e você pode copiar a lista.'],
+[()=>$('#addb'),'Importante · Vídeos de links','O app não baixa vídeos de links do YouTube, TikTok ou Instagram. Salve o vídeo na galeria antes e escolha em Fotos e vídeos. Reabra este guia no botão Tutorial.']
+];
+const TS=[
+[()=>$('#hubh'),'Bem-vindo à Central','Aqui ficam todos os módulos do app. Toque em um para abrir. Vamos conhecer os principais.','home'],
+[()=>$('#req'),'Criar com IA · Escreva o pedido','Descreva o vídeo que o cliente quer. Você também pode enviar uma imagem inicial e dizer o que evitar.','ia'],
+[()=>$('#pdur'),'Duração e formato','Escolha quanto o vídeo dura e o formato: 9:16 para Reels, TikTok e Stories.','ia'],
+[()=>$('#ia'),'Criar vídeo','Toque aqui. A IA escreve o roteiro e monta as cenas. Na primeira vez o app pede sua permissão.','ia'],
+[()=>$('#tl'),'Editor · Linha do tempo','Cada quadrado é uma cena. Toque para selecionar e use as ferramentas embaixo: texto, recorte, áudio, voz, legendas, logo e ordem.','editor'],
+[()=>$('#mode').closest('.card'),'Anúncios','Nome, preço, chamada final, modelo do anúncio e logo da marca.','anuncios'],
+[()=>$('#pav'),'Personagens IA','Escolha um boneco que fala os textos das cenas, onde ele fica na tela, o tamanho e em quais cenas ele aparece.','personagens'],
+[()=>$('#vsnd').closest('.card'),'Games e gameplay','Adicione sua gravação de tela, marque Manter o som e use o ajuste com fundo desfocado em vídeos deitados.','games'],
+[()=>$('#tbtn').closest('.card'),'Voz e legendas','Traduza os textos, narre em voz alta e use legendas.','voz'],
+[()=>$('#bp'),'Prévia','Assista antes de gerar. Se algo não ficou bom, ajuste no Editor.','editor'],
+[()=>$('#br'),'Gerar e salvar','Toque em Gerar vídeo, deixe a tela aberta até o fim e depois toque em Salvar vídeo.','editor'],
+[()=>$('#pjs'),'Meus projetos','Salve seu trabalho e abra depois.','projetos'],
+[()=>$('#psend'),'Solicitar recursos','Envie ideias e problemas. Eles entram na lista de pedidos.','pedidos'],
+[()=>$('#hubh'),'Importante · Vídeos de links','O app não baixa vídeos de YouTube, TikTok ou Instagram. Salve o vídeo na galeria antes e escolha o arquivo.','home']
+];
+function showT(n){
+ document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
+ if(n>=TS.length){closeT();return}
+ const g=TS[n];go(g[3]||'ia');const el=g[0]();el.classList.add('hl');el.scrollIntoView({block:'center',behavior:'smooth'});
+ $('#tt').textContent=g[1];$('#td').textContent=g[2];$('#tn').textContent=n===TS.length-1?'Concluir':'Próximo';
+ $('#tbk').style.visibility=n?'visible':'hidden';$('#tut').style.display='block';document.body.classList.add('tt');$('#tut').dataset.n=n
+}
+function closeT(){document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));$('#tut').style.display='none';document.body.classList.remove('tt');try{localStorage.setItem('tutok3','1')}catch(e){}}
+$('#tn').onclick=()=>showT(+$('#tut').dataset.n+1);
+$('#tbk').onclick=()=>showT(+$('#tut').dataset.n-1);
+$('#tx').onclick=closeT;$('#hb').onclick=()=>showT(0);
+['tpl','cap'].forEach(id=>$('#'+id).addEventListener('change',()=>draw(cur)));
+let logoData='';
+function saveBrand(){try{localStorage.setItem('brand',JSON.stringify({prod:$('#prod').value,col:$('#col').value,cta:$('#cta').value,tpl:$('#tpl').value,logo:logoData}))}catch(e){}}
+function setLogo(d){logoData=d;if(!d){logo=null;return}logo=new Image();logo.onload=()=>draw(cur);logo.src=d}
+$('#logo').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),h=Math.min(256,im.naturalHeight);c.height=h;c.width=im.naturalWidth/im.naturalHeight*h;c.getContext('2d').drawImage(im,0,0,c.width,c.height);setLogo(c.toDataURL('image/png'));saveBrand()};im.src=URL.createObjectURL(f)};
+['prod','col','cta','tpl'].forEach(id=>$('#'+id).addEventListener('change',saveBrand));
+try{const b=JSON.parse(localStorage.getItem('brand')||'null');if(b){['prod','col','cta','tpl'].forEach(k=>{if(b[k])$('#'+k).value=b[k]});if(b.logo)setLogo(b.logo)}}catch(e){}
+async function autoAll(){
+ if(!scenes.length){$('#st').textContent='Primeiro adicione suas fotos ou vídeos.';return}
+ if(playing)stopPlay();
+ let sm=null;try{sm=await claude.use('sample')}catch(e){}
+ if(!sm){$('#st').textContent='O modo automático não está disponível neste aparelho.';return}
+ const b=$('#auto');b.disabled=true;$('#st').textContent='Analisando suas cenas…';
+ try{
+  if(scenes.length===1&&scenes[0].isV&&scenes[0].el.duration>8){const s0=scenes[0],n=Math.min(6,Math.floor(s0.el.duration/4)),step=Math.floor(s0.el.duration/n);scenes=[...Array(n)].map((_,k)=>Object.assign({},s0,{start:k*step,dur:4}))}
+  const blobs=[],idx=[];
+  for(let k=0;k<scenes.length;k++){
+   const s=scenes[k];
+   if(s.isV){s.el.currentTime=s.start||0;await new Promise(r=>{s.el.onseeked=r;setTimeout(r,900)})}
+   if(!s.el)continue;const w=s.el.videoWidth||s.el.naturalWidth,h=s.el.videoHeight||s.el.naturalHeight;if(!w)continue;
+   const c=document.createElement('canvas');c.width=384;c.height=Math.round(384*h/w);c.getContext('2d').drawImage(s.el,0,0,c.width,c.height);
+   blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.7)));idx.push(k)
+  }
+  const prod=$('#prod').value.trim();
+  const r=await sm.json('Você é redator de anúncios para redes sociais. Há '+blobs.length+' imagens, uma por cena, em ordem. Produto: '+(prod||'não informado')+'. Escreva um título curto em português do Brasil (máximo 6 palavras) para cada cena, escolha um modelo entre classico, oferta, minimal e luxo, e uma chamada final curta. Responda somente JSON: {"titulos":["..."],"modelo":"classico","cta":"..."}',{images:blobs});
+  idx.forEach((k,j)=>{scenes[k].head=String((r.titulos||[])[j]||'')});
+  if(['classico','oferta','minimal','luxo'].includes(r.modelo))$('#tpl').value=r.modelo;
+  if(r.cta)$('#cta').value=String(r.cta);
+  saveBrand();renderList();cur=0;draw(0);$('#st').textContent='Pronto! Revise os textos e toque em Prévia.'
+ }catch(e){$('#st').textContent=e&&e.code==='not_granted'?'Permissão negada para o modo automático.':'Não consegui montar sozinho agora. Tente de novo.'}
+ b.disabled=false
+}
+$('#auto').onclick=autoAll;
+function paint(s,W,H,zoom,alpha){
+ if(!s.gen){cover(s.el,W,H,zoom,alpha);return}
+ ctx.globalAlpha=alpha;const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,s.bg[0]);g.addColorStop(1,s.bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ const m=Math.min(W,H);
+ if(s.el&&s.el.complete&&s.el.naturalWidth){const sz=m*.72*zoom;ctx.drawImage(s.el,(W-sz)/2,H*.4-sz/2,sz,sz)}
+ else if(s.emoji){ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=(m*.38*zoom)+'px system-ui';ctx.fillText(s.emoji,W/2,H*.4+m*.13)}
+ ctx.globalAlpha=1
+}
+function mkGen(c){
+ const ok=h=>/^#[0-9a-f]{6}$/i.test(h||'');
+ const bg=[ok(c.cor1)?c.cor1:'#1f2937',ok(c.cor2)?c.cor2:'#4b5563'],txt=String(c.texto||''),em=String(c.emoji||'').slice(0,4);
+ let el=null,url='',sv=String(c.svg||'');
+ if(/^\s*<svg/i.test(sv)&&!/<script|foreignObject|<image|href=|\son\w+\s*=/i.test(sv)){
+  const vb=(sv.match(/<svg[^>]*?(viewBox="[^"]*")/i)||[])[1]||'viewBox="0 0 100 100"';
+  sv=sv.replace(/<svg[^>]*>/i,'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" '+vb+'>');
+  url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(sv);
+  el=new Image();el.onload=()=>draw(cur);el.src=url
+ }else{
+  url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+bg[0]+'"/><stop offset="1" stop-color="'+bg[1]+'"/></linearGradient></defs><rect width="10" height="10" fill="url(#g)"/><text x="5" y="7" font-size="6" text-anchor="middle">'+em.replace(/[<>&]/g,'')+'</text></svg>')
+ }
+ const words=txt.split(/\s+/).filter(Boolean).length;
+ return {isV:false,gen:true,el,url,bg,emoji:em,head:txt,dur:Math.min(10,Math.max(3,Math.round(words*.45+1.5))),start:0}
+}
+function drawAvatarRaw(k,W,H,t,talk,col,P,lt){
+ const R=P.R,cx=P.cx+Math.sin(t*1.3)*R*.05*P.amp,cy=P.cy+(P.amp>0?Math.sin(t*3)*R*.03:0)+P.dy,o=(window.micLvl>.03?Math.min(1,window.micLvl*5):(talk?Math.abs(Math.sin(t*13)):0)),bl=(t%3.2)<.12?.15:1;
+ const skin=($('#skin')||{}).value||'#f1c9a5',hair=($('#hair')||{}).value||'#3b2a20';
+ const circ=(x,y,r,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()};
+ const elp=(x,y,rx,ry,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,7);ctx.fill()};
+ const eye=(x,y,r)=>{ctx.beginPath();ctx.ellipse(x,y,r,r*bl,0,0,7);ctx.fill()};
+ const mouth=(x,y,rx,c)=>elp(x,y,rx,Math.max(R*.04,o*R*.2),c||'#7a2e2e');
+ ctx.save();ctx.globalAlpha=1;ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=R*.2;
+ ctx.fillStyle=k==='astronauta'?'#e5e7eb':col;
+ if(P.anchored){ctx.beginPath();ctx.ellipse(cx,cy+R*1.55,R*1.35,R*1.0,0,Math.PI,2*Math.PI);ctx.fill()}else rr(cx-R*1.35,cy+R*.55,R*2.7,R*1.15,R*.55);
+ ctx.shadowBlur=0;
+ const am=P.amp,tilt=am*(avE*(Math.sin(t*2.3)*.07+Math.sin(t*3.9)*.03)+(1-avE)*Math.sin(t*1.1)*.025),hdy=am*avE*Math.abs(Math.sin(t*4.4))*R*.05;
+ drawArms(k,cx,cy,R,t,lt,{amp:am,wave:P.wave,col:col});
+ const piv=cy+R*.95;ctx.save();ctx.translate(cx,piv+hdy);ctx.rotate(tilt);ctx.translate(-cx,-piv);
+ if(k==='robo'){
+  ctx.fillStyle='#d4d8de';rr(cx-R,cy-R*.9,R*2,R*1.8,R*.35);
+  ctx.fillStyle='#6b7280';ctx.fillRect(cx-R*.05,cy-R*1.25,R*.1,R*.38);ctx.beginPath();ctx.arc(cx,cy-R*1.3,R*.12,0,7);ctx.fill();
+  ctx.fillStyle='#22d3ee';eye(cx-R*.42,cy-R*.15,R*.2);eye(cx+R*.42,cy-R*.15,R*.2);
+  ctx.fillStyle='#374151';rr(cx-R*.45,cy+R*.3,R*.9,Math.max(R*.06,o*R*.3),R*.05)
+ }else if(k==='gato'){
+  ctx.fillStyle='#e9a86b';ctx.beginPath();ctx.moveTo(cx-R*.95,cy-R*.2);ctx.lineTo(cx-R*.7,cy-R*1.2);ctx.lineTo(cx-R*.15,cy-R*.85);ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx+R*.95,cy-R*.2);ctx.lineTo(cx+R*.7,cy-R*1.2);ctx.lineTo(cx+R*.15,cy-R*.85);ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  ctx.fillStyle='#1f2937';eye(cx-R*.38,cy-R*.1,R*.1);eye(cx+R*.38,cy-R*.1,R*.1);
+  ctx.fillStyle='#f4a3b5';ctx.beginPath();ctx.moveTo(cx-R*.1,cy+R*.12);ctx.lineTo(cx+R*.1,cy+R*.12);ctx.lineTo(cx,cy+R*.24);ctx.fill();
+  ctx.fillStyle='#7a2e2e';ctx.beginPath();ctx.ellipse(cx,cy+R*.45,R*.2,Math.max(R*.03,o*R*.17),0,0,7);ctx.fill();
+  ctx.strokeStyle='#1f2937';ctx.lineWidth=R*.02;[-1,1].forEach(d=>[.28,.4].forEach(y=>{ctx.beginPath();ctx.moveTo(cx+d*R*.55,cy+R*y);ctx.lineTo(cx+d*R*1.2,cy+R*(y-.08));ctx.stroke()}))
+ }else if(k==='cachorro'){
+  elp(cx-R*1.0,cy+R*.15,R*.38,R*.75,'#8b5a2b');elp(cx+R*1.0,cy+R*.15,R*.38,R*.75,'#8b5a2b');
+  circ(cx,cy,R,'#d9a066');elp(cx,cy+R*.35,R*.55,R*.42,'#f3dcc0');
+  elp(cx-R*.42,cy-R*.1,R*.2,R*.2,'#8b5a2b');
+  ctx.fillStyle='#1f2937';eye(cx-R*.38,cy-R*.15,R*.1);eye(cx+R*.38,cy-R*.15,R*.1);
+  elp(cx,cy+R*.14,R*.2,R*.13,'#1f2937');
+  if(o>.35)elp(cx,cy+R*.62,R*.17,R*.14*o+R*.04,'#e86b7a');
+  else{ctx.strokeStyle='#1f2937';ctx.lineWidth=R*.03;ctx.beginPath();ctx.arc(cx-R*.12,cy+R*.3,R*.14,.1,Math.PI-.1);ctx.arc(cx+R*.12,cy+R*.3,R*.14,.1,Math.PI-.1);ctx.stroke()}
+  if(o>.12)elp(cx,cy+R*.5,R*.2,Math.max(R*.04,o*R*.17),'#7a2e2e')
+ }else if(k==='panda'){
+  circ(cx-R*.8,cy-R*.8,R*.32,'#1f2937');circ(cx+R*.8,cy-R*.8,R*.32,'#1f2937');
+  circ(cx,cy,R,'#f8fafc');
+  ctx.save();ctx.translate(cx-R*.38,cy-R*.08);ctx.rotate(.5);elp(0,0,R*.26,R*.34,'#1f2937');ctx.restore();
+  ctx.save();ctx.translate(cx+R*.38,cy-R*.08);ctx.rotate(-.5);elp(0,0,R*.26,R*.34,'#1f2937');ctx.restore();
+  ctx.fillStyle='#fff';eye(cx-R*.36,cy-R*.1,R*.08);eye(cx+R*.36,cy-R*.1,R*.08);
+  elp(cx,cy+R*.2,R*.15,R*.1,'#1f2937');mouth(cx,cy+R*.5,R*.2,'#374151')
+ }else if(k==='alien'){
+  ctx.strokeStyle='#4ade80';ctx.lineWidth=R*.05;
+  [-1,1].forEach(d=>{ctx.beginPath();ctx.moveTo(cx+d*R*.35,cy-R*.9);ctx.lineTo(cx+d*R*.7,cy-R*1.45);ctx.stroke();circ(cx+d*R*.7,cy-R*1.5,R*.13,'#f472b6')});
+  elp(cx,cy,R*.95,R*1.08,'#4ade80');
+  ctx.save();ctx.translate(cx-R*.42,cy-R*.1);ctx.rotate(.35);elp(0,0,R*.3,R*.42,'#111827');ctx.restore();
+  ctx.save();ctx.translate(cx+R*.42,cy-R*.1);ctx.rotate(-.35);elp(0,0,R*.3,R*.42,'#111827');ctx.restore();
+  ctx.fillStyle='#fff';eye(cx-R*.5,cy-R*.22,R*.07);eye(cx+R*.5,cy-R*.22,R*.07);
+  mouth(cx,cy+R*.55,R*.17,'#14532d')
+ }else if(k==='astronauta'){
+  circ(cx,cy,R*1.12,'#e5e7eb');elp(cx,cy,R*.88,R*.8,'#1e3a8a');
+  circ(cx,cy+R*.02,R*.66,skin);
+  ctx.fillStyle='#1f2937';eye(cx-R*.26,cy-R*.05,R*.07);eye(cx+R*.26,cy-R*.05,R*.07);
+  mouth(cx,cy+R*.3,R*.18);
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.ellipse(cx-R*.5,cy-R*.4,R*.14,R*.28,.6,0,7);ctx.fill();
+  circ(cx+R*1.0,cy+R*.1,R*.1,'#ef4444')
+ }else if(k==='mulher'){
+  elp(cx,cy+R*.25,R*1.15,R*1.3,hair);
+  circ(cx,cy,R,skin);
+  ctx.fillStyle=hair;ctx.beginPath();ctx.arc(cx,cy,R*1.03,Math.PI*1.02,Math.PI*1.98);ctx.lineTo(cx+R*.45,cy-R*.45);ctx.quadraticCurveTo(cx,cy-R*.1,cx-R*.45,cy-R*.45);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1f2937';eye(cx-R*.36,cy,R*.09);eye(cx+R*.36,cy,R*.09);
+  ctx.strokeStyle='#1f2937';ctx.lineWidth=R*.025;[-1,1].forEach(d=>{ctx.beginPath();ctx.moveTo(cx+d*R*.46,cy-R*.06);ctx.lineTo(cx+d*R*.56,cy-R*.14);ctx.stroke()});
+  elp(cx-R*.6,cy+R*.3,R*.12,R*.12,'rgba(232,120,140,.55)');elp(cx+R*.6,cy+R*.3,R*.12,R*.12,'rgba(232,120,140,.55)');
+  mouth(cx,cy+R*.5,R*.24,'#c2185b')
+ }else if(k==='crianca'){
+  circ(cx,cy-R*1.0,R*.2,hair);circ(cx,cy,R*1.04,skin);
+  ctx.fillStyle=hair;ctx.beginPath();ctx.arc(cx,cy,R*1.06,Math.PI*1.08,Math.PI*1.92);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1f2937';eye(cx-R*.38,cy+R*.05,R*.15);eye(cx+R*.38,cy+R*.05,R*.15);
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx-R*.34,cy,R*.04,0,7);ctx.arc(cx+R*.42,cy,R*.04,0,7);ctx.fill();
+  elp(cx-R*.62,cy+R*.32,R*.14,R*.14,'rgba(232,120,140,.6)');elp(cx+R*.62,cy+R*.32,R*.14,R*.14,'rgba(232,120,140,.6)');
+  ctx.fillStyle='rgba(120,70,40,.5)';[-.15,0,.15].forEach(d=>{ctx.beginPath();ctx.arc(cx+d*R,cy+R*.22,R*.025,0,7);ctx.fill()});
+  mouth(cx,cy+R*.52,R*.24)
+ }else if(k==='vovo'){
+  elp(cx-R*.95,cy+R*.1,R*.2,R*.42,'#d1d5db');elp(cx+R*.95,cy+R*.1,R*.2,R*.42,'#d1d5db');
+  circ(cx,cy,R,skin);
+  ctx.fillStyle='#e5e7eb';ctx.beginPath();ctx.arc(cx,cy,R*1.0,Math.PI*1.02,Math.PI*1.2);ctx.lineTo(cx-R*.7,cy-R*.35);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,R*1.0,Math.PI*1.8,Math.PI*1.98);ctx.lineTo(cx+R*.7,cy-R*.35);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1f2937';eye(cx-R*.36,cy-R*.02,R*.08);eye(cx+R*.36,cy-R*.02,R*.08);
+  ctx.strokeStyle='#374151';ctx.lineWidth=R*.04;ctx.beginPath();ctx.arc(cx-R*.36,cy-R*.02,R*.24,0,7);ctx.stroke();ctx.beginPath();ctx.arc(cx+R*.36,cy-R*.02,R*.24,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-R*.12,cy-R*.02);ctx.lineTo(cx+R*.12,cy-R*.02);ctx.stroke();
+  ctx.strokeStyle='rgba(120,80,50,.45)';ctx.lineWidth=R*.02;[-1,1].forEach(d=>{ctx.beginPath();ctx.moveTo(cx+d*R*.65,cy+R*.15);ctx.lineTo(cx+d*R*.78,cy+R*.2);ctx.stroke()});
+  mouth(cx,cy+R*.52,R*.2);elp(cx,cy+R*.3,R*.34,R*.1,'#e5e7eb')
+ }else{
+  circ(cx,cy,R,skin);
+  ctx.fillStyle=hair;ctx.beginPath();ctx.arc(cx,cy,R*1.02,Math.PI*1.04,Math.PI*1.96);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1f2937';eye(cx-R*.36,cy-R*.05,R*.09);eye(cx+R*.36,cy-R*.05,R*.09);
+  ctx.fillStyle='#e8a0a0';ctx.beginPath();ctx.arc(cx-R*.6,cy+R*.25,R*.12,0,7);ctx.arc(cx+R*.6,cy+R*.25,R*.12,0,7);ctx.fill();
+  ctx.fillStyle='#7a2e2e';ctx.beginPath();ctx.ellipse(cx,cy+R*.45,R*.26,Math.max(R*.04,o*R*.2),0,0,7);ctx.fill()
+ }
+ ctx.restore();ctx.restore()
+}
+async function iaCreate(){
+ const req=$('#req').value.trim();
+ if(!req&&!scenes.length){$('#st').textContent='Escreva o que você quer criar ou adicione uma imagem.';return}
+ if(playing)stopPlay();
+ let sm=null;try{sm=await claude.use('sample')}catch(e){}
+ if(!sm){$('#st').textContent=('O modo IA não está disponível. '+(window.aiWhy||''));return}
+ const b=$('#ia');b.disabled=true;$('#st').textContent='Criando seu vídeo… pode levar até 1 minuto.';
+ try{
+  const kind=$('#kind').value,tone=$('#tone').value,n=+$('#nsc').value,blobs=[],idx=[];
+  for(let k=0;k<scenes.length;k++){const s=scenes[k];if(!s.el)continue;
+   if(s.isV){s.el.currentTime=s.start||0;await new Promise(r=>{s.el.onseeked=r;setTimeout(r,900)})}
+   const w=s.el.videoWidth||s.el.naturalWidth,h=s.el.videoHeight||s.el.naturalHeight;if(!w)continue;
+   const c=document.createElement('canvas');c.width=384;c.height=Math.round(384*h/w);c.getContext('2d').drawImage(s.el,0,0,c.width,c.height);
+   blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.7)));idx.push(k)}
+  const useImgs=blobs.length>0;
+  const schema='{"titulo":"","produto":"","modelo":"classico","cta":"","cenas":[{"texto":"","emoji":"","cor1":"#112233","cor2":"#445566","svg":""}]}';
+  const p='Você cria roteiros curtos de vídeo para redes sociais em português do Brasil. Pedido do cliente: '+(req||'(sem texto; baseie-se nas imagens)')+'. Tipo: '+kind+'. Tom: '+tone+'. Estilo visual: '+$('#sty').value+'. '+($('#neg').value.trim()?'Evite: '+$('#neg').value.trim()+'. ':'')+(useImgs?'Há '+blobs.length+' imagens, uma por cena, em ordem: escreva exatamente '+blobs.length+' cenas, cada texto de até 14 palavras descrevendo ou vendendo o que aparece na imagem correspondente; deixe svg vazio. ':'Escreva exatamente '+n+' cenas. Cada cena tem texto curto de até 14 palavras, um emoji que represente a cena, duas cores hexadecimais de fundo harmoniosas e escuras o bastante para texto branco, e em svg uma ilustração simples e plana (viewBox 0 0 100 100, até 700 caracteres, só formas básicas, sem texto e sem imagens externas) ou vazio. ')+'Historinhas têm começo, meio e fim. Anúncios terminam com chamada para ação. O campo modelo é um entre classico, oferta, minimal e luxo. Responda somente JSON neste formato: '+schema;
+  const r=await sm.json(p,useImgs?{images:blobs}:{});
+  const cs=Array.isArray(r.cenas)?r.cenas:[];
+  if(!cs.length)throw new Error('vazio');
+  if(useImgs)idx.forEach((k,j)=>{scenes[k].head=String((cs[j]||{}).texto||'')});else scenes=cs.slice(0,10).map(c=>mkGen(c));
+  if(!useImgs&&$('#sf').files[0]){const u=URL.createObjectURL($('#sf').files[0]),im=new Image();im.onload=()=>draw(cur);im.src=u;scenes[0]=Object.assign({},scenes[0],{gen:false,el:im,url:u})}
+  if(kind==='anuncio'){$('#mode').value='ad';if(r.produto)$('#prod').value=String(r.produto).slice(0,60);if(['classico','oferta','minimal','luxo'].includes(r.modelo))$('#tpl').value=r.modelo;if(r.cta)$('#cta').value=String(r.cta).slice(0,40)}else $('#mode').value='clip';
+  $('#mode').dispatchEvent(new Event('input'));
+  saveBrand();renderList();cur=0;draw(0);$('#st').textContent='Pronto! Veja a prévia e ajuste os textos se quiser.'
+ }catch(e){$('#st').textContent=e&&e.code==='not_granted'?'Permissão negada para o modo IA.':'Não consegui criar agora. Tente de novo ou descreva de outro jeito.'}
+ b.disabled=false
+}
+$('#ia').onclick=iaCreate;$('#avatar').addEventListener('change',()=>draw(cur));
+const bgc=document.createElement('canvas'),bgx=bgc.getContext('2d');
+function prepAudio(){
+ if(cloudOn())ensureAudio();
+ const k=$('#vsnd').checked;
+ scenes.forEach(s=>{if(!s.isV)return;
+  if(k){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();adest=adest||actx.createMediaStreamDestination();
+   if(!s.el._w){const sr=actx.createMediaElementSource(s.el);sr.connect(adest);sr.connect(actx.destination);s.el._w=1}}catch(e){}
+   s.el.muted=false;const pr=s.el.play();if(pr&&pr.then)pr.then(()=>{s.el.pause();if(playing&&scenes[curIdx]&&scenes[curIdx].el===s.el)s.el.play().catch(()=>{})}).catch(()=>{})}
+  else s.el.muted=true});
+ if(actx&&actx.state==='suspended')actx.resume()
+}
+function showTab(p){$('#est').style.display=p?'none':'';$('#ped').style.display=p?'':'none';[['#tabe',!p],['#tabp',p]].forEach(([q,v])=>{const e=$(q);if(e)e.classList.toggle('on',v)});if(p){if(playing)stopPlay();loadPed();window.scrollTo(0,0)}}
+
+(function(){const u=navigator.userAgent;$('#pdev').value=/iPhone|iPod/.test(u)?'iPhone':/Android/.test(u)?'Android':/iPad/.test(u)?'Tablet':'Computador'})();
+let pdb=null;
+async function getDb(){if(pdb)return pdb;try{pdb=(await claude.use('db'))||null}catch(e){pdb=null}return pdb}
+function localPeds(){try{return JSON.parse(localStorage.getItem('pedidos')||'[]')}catch(e){return[]}}
+function saveLocal(a){try{localStorage.setItem('pedidos',JSON.stringify(a.slice(0,100)))}catch(e){}}
+async function allPeds(){
+ let items=[];const db=await getDb();
+ if(db){try{const sn=await db.collection('pedidos').orderBy('ts','desc').limit(100).get();items=sn.docs.map(d=>d.data())}catch(e){}}
+ const loc=localPeds().filter(l=>!items.some(i=>i.ts===l.ts&&i.texto===l.texto));
+ return loc.concat(items).sort((a,b)=>b.ts-a.ts)
+}
+async function loadPed(){
+ const L=$('#plist');L.textContent='Carregando…';const items=await allPeds();L.textContent='';
+ if(!items.length){L.textContent='Nenhum pedido ainda. Seja o primeiro!';return}
+ items.forEach(i=>{const d=document.createElement('div');d.className='pd';const c=document.createElement('div');
+  [i.cat,i.dev,i.status||'Novo'].forEach(t=>{const s=document.createElement('span');s.className='chip';s.textContent=t||'';c.appendChild(s)});
+  const p=document.createElement('div');p.textContent=i.texto||'';p.style.marginTop='6px';
+  const m=document.createElement('small');m.textContent=new Date(i.ts).toLocaleString('pt-BR')+(i.local?' · só neste aparelho':'');
+  d.append(c,p,m);L.appendChild(d)})
+}
+$('#psend').onclick=async()=>{
+ const tx=$('#ptx').value.trim();if(tx.length<5){$('#pst').textContent='Escreva um pouco mais sobre o pedido.';return}
+ const it={texto:tx.slice(0,1000),cat:$('#pcat').value,dev:$('#pdev').value,ts:Date.now(),status:'Novo'};
+ let ok=false;const db=await getDb();
+ if(db){try{await db.collection('pedidos').add(it);ok=true}catch(e){}}
+ if(!ok){const l=Object.assign({local:true},it);const a=localPeds();a.unshift(l);saveLocal(a)}
+ $('#ptx').value='';$('#pst').textContent=ok?'Pedido enviado! Obrigado.':'Pedido salvo neste aparelho. Toque em Copiar lista e envie para quem cuida do app.';loadPed()
+};
+$('#pcopy').onclick=async()=>{
+ const items=await allPeds();const txt=items.length?items.map((i,n)=>(n+1)+'. ['+i.cat+' | '+i.dev+' | '+(i.status||'Novo')+'] '+i.texto).join('\n'):'Sem pedidos.';
+ let ok=false;try{await navigator.clipboard.writeText(txt);ok=true}catch(e){}
+ if(!ok){try{const t=document.createElement('textarea');t.value=txt;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();ok=document.execCommand('copy');t.remove()}catch(e){}}
+ $('#pst').textContent=ok?'Lista copiada!':'Não consegui copiar. Selecione e copie os pedidos manualmente.'
+};
+const MODS={ia:['🪄','Criar com IA','Texto, imagem, roteiro ou ideia.'],editor:['🎞️','Editor de vídeos','Cortes, áudio, efeitos e montagem.'],anuncios:['📣','Anúncios','Publicidade e apresentação de produtos.'],personagens:['🧑','Personagens IA','Avatares, bonecos e apresentadores.'],trafego:['📈','Gestor de Tráfego IA','Plano, vídeos e otimização de anúncios para clientes.'],games:['🎮','Games e gameplay','Gravações de tela e clipes de jogos.'],voz:['🎙️','Voz e legendas','Narração, legendas e tradução.'],projetos:['📁','Meus projetos','Projetos salvos e histórico.'],pedidos:['💡','Solicitar recursos','Enviar ideias e acompanhar sugestões.'],tutoriais:['📖','Central de tutoriais','Guias para iniciantes e avançados.'],config:['⚙️','Configurações','Marca e preferências.']};
+let curView='home',tsel=0,qk='texto';
+$('#est .stage').closest('.card').dataset.v='ia editor anuncios personagens games voz';
+(function(){const L=$('#mlist');Object.keys(MODS).forEach(k=>{const b=document.createElement('button');b.className='mi';b.innerHTML='<i>'+MODS[k][0]+'</i><div><b>'+MODS[k][1]+'</b><span>'+MODS[k][2]+'</span></div><em>›</em>';b.onclick=()=>go(k);L.appendChild(b)})})();
+function go(v,fh){
+ if(!MODS[v])v='home';
+ const st=['ia','editor','anuncios','personagens','games','voz','config'].includes(v),first=curView!==v;
+ $('#hub').style.display=v==='home'?'':'none';$('#mbar').style.display=v==='home'?'none':'flex';
+ $('#est').style.display=st?'':'none';$('#ped').style.display=v==='pedidos'?'':'none';$('#trf').style.display=v==='trafego'?'':'none';$('#pj').style.display=v==='projetos'?'':'none';$('#tu').style.display=v==='tutoriais'?'':'none';
+ document.body.classList.toggle('mod',v!=='home');
+ if(st)document.querySelectorAll('#est .card[data-v]').forEach(c=>c.style.display=c.dataset.v.split(' ').includes(v)?'':'none');
+ $('#mt').textContent=v==='home'?'':MODS[v][1];
+ if(first){if(v==='games')$('#kind').value='gameplay';if(v==='anuncios'){$('#mode').value='ad';$('#mode').dispatchEvent(new Event('input'))}}
+ curView=v;if(playing)stopPlay();
+ if(v==='trafego')trfOpen();if(v==='pedidos')loadPed();if(v==='projetos')loadPj();if(v==='editor'){renderTL();qpShow()}
+ draw(cur);if(first)window.scrollTo(0,0);
+ const h=v==='home'?'':v;if(!fh&&location.hash.slice(1)!==h)location.hash=h
+}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1)||'home';if(h!==curView)go(h,true)});
+$('#mback').onclick=()=>go('home');$('#mhelp').onclick=()=>showT(0);$('#tustart').onclick=()=>showT(0);
+document.querySelectorAll('.pl').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;g.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ if(g.id==='pdur')$('#nsc').value=b.dataset.n;else if(g.id==='par'){$('#fmt').value=b.dataset.f;setFmt()}else if(g.id==='pav'){$('#avatar').value=b.dataset.a;draw(cur)}});
+$('#nsc').value='6';
+$('#pcol').oninput=e=>{$('#col').value=e.target.value;$('#col').dispatchEvent(new Event('input'))};
+function renderTL(){
+ const L=$('#tl');if(tsel>=scenes.length)tsel=Math.max(0,scenes.length-1);L.innerHTML='';
+ scenes.forEach((s,i)=>{const d=document.createElement('div');d.className='tc'+(i===tsel?' sel':'');
+  const th=document.createElement(s.isV?'video':'img');th.src=s.url+(s.isV?'#t=0.1':'');if(s.isV){th.muted=true;th.playsInline=true;th.preload='metadata'}
+  const l=document.createElement('div');l.textContent=s.dur+'s';d.append(th,l);
+  d.onclick=()=>{tsel=i;if(playing)stopPlay();let a=0;for(let k=0;k<i;k++)a+=scenes[k].dur;cur=a+.01;draw(cur);renderTL();qpShow()};L.appendChild(d)});
+ const ad=document.createElement('button');ad.className='tc add s';ad.textContent='+';ad.onclick=()=>$('#fi').click();L.appendChild(ad)
+}
+function qpShow(){
+ const P=$('#qp');P.innerHTML='';
+ document.querySelectorAll('#tb button').forEach(b=>b.classList.toggle('on',b.dataset.q===qk));
+ const s=scenes[tsel];
+ const num=(lab,val,min,max,fn)=>{const l=document.createElement('label');l.textContent=lab;const i=document.createElement('input');i.type='number';i.min=min;i.max=max;i.step=.5;i.value=val;i.oninput=()=>{fn(Math.max(min,Math.min(max,+i.value||min)));renderTL()};P.append(l,i)};
+ const chk=(lab,id)=>{const l=document.createElement('label');l.style.cssText='display:flex;gap:8px;align-items:center;margin:8px 0;color:var(--tx);font-size:14px';const c=document.createElement('input');c.type='checkbox';c.style.width='20px';c.checked=$(id).checked;c.onchange=()=>{$(id).checked=c.checked;$(id).dispatchEvent(new Event('change'))};l.append(c,lab);P.appendChild(l)};
+ const btn=(lab,fn)=>{const b=document.createElement('button');b.className='s';b.textContent=lab;b.style.margin='8px 8px 0 0';b.onclick=fn;P.appendChild(b)};
+ if(qk==='audio'){btn('♪ Escolher música',()=>$('#musb').click());chk('Manter o som dos meus vídeos','#vsnd');return}
+ if(qk==='voz'){chk('Narrar os textos em voz alta (prévia)','#nar');chk('Gravar minha voz ao gerar o vídeo','#mic');return}
+ if(qk==='legenda'){chk('Texto em estilo legenda','#cap');return}
+ if(qk==='logo'){btn('▣ Enviar logo da marca',()=>$('#logo').click());return}
+ if(!s){P.textContent='Adicione uma cena para editar.';return}
+ if(qk==='texto'){const l=document.createElement('label');l.textContent='Texto da cena '+(tsel+1);const i=document.createElement('input');i.value=s.head;i.maxLength=140;i.oninput=()=>{s.head=i.value;draw(cur)};P.append(l,i)}
+ else if(qk==='recorte'){num('Duração da cena (segundos)',s.dur,1,15,v=>{s.dur=v;draw(cur)});if(s.isV)num('Começar o vídeo em (segundos)',s.start||0,0,3600,v=>{s.start=v})}
+ else if(qk==='boneco'){
+  const on=$('#avmode').value==='marked'?s.av===true:s.av!==false;
+  const l=document.createElement('label');l.style.cssText='display:flex;gap:8px;align-items:center;margin:8px 0;color:var(--tx);font-size:14px';
+  const c=document.createElement('input');c.type='checkbox';c.style.width='20px';c.checked=on;c.onchange=()=>{s.av=c.checked;draw(cur);renderList()};l.append(c,'Mostrar o boneco na cena '+(tsel+1));P.appendChild(l);
+  const lb=document.createElement('label');lb.textContent='Posição nesta cena';const se=document.createElement('select');
+  [['','Igual ao padrão'],['tl','Em cima · esquerda'],['tc','Em cima · centro'],['tr','Em cima · direita'],['ml','Meio · esquerda'],['mc','Meio · centro'],['mr','Meio · direita'],['bl','Embaixo · esquerda'],['bc','Embaixo · centro'],['br','Embaixo · direita']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;se.appendChild(o)});
+  se.value=s.avpos||'';se.onchange=()=>{s.avpos=se.value||undefined;draw(cur)};P.append(lb,se);
+  btn('Boneco em todas as cenas',()=>{scenes.forEach(x=>x.av=true);renderList();draw(cur);qpShow()});
+  btn('Tirar de todas',()=>{scenes.forEach(x=>x.av=false);renderList();draw(cur);qpShow()})}
+ else if(qk==='ordem'){btn('← Para trás',()=>{if(tsel>0){[scenes[tsel-1],scenes[tsel]]=[scenes[tsel],scenes[tsel-1]];tsel--;renderList();draw(cur);qpShow()}});btn('Para frente →',()=>{if(tsel<scenes.length-1){[scenes[tsel+1],scenes[tsel]]=[scenes[tsel],scenes[tsel+1]];tsel++;renderList();draw(cur);qpShow()}});btn('🗑 Remover',()=>{scenes.splice(tsel,1);renderList();draw(cur);qpShow()})}
+}
+$('#tb').onclick=e=>{const b=e.target.closest('button');if(!b)return;qk=b.dataset.q;qpShow()};
+function pjAll(){try{return JSON.parse(localStorage.getItem('projs')||'[]')}catch(e){return[]}}
+function loadPj(){
+ const L=$('#pjl');L.textContent='';const a=pjAll();if(!a.length){L.textContent='Nenhum projeto salvo ainda.';return}
+ a.forEach((p,i)=>{const d=document.createElement('div');d.className='pd';const t=document.createElement('b');t.textContent=p.nome;
+  const m=document.createElement('small');m.style.display='block';m.textContent=new Date(p.ts).toLocaleString('pt-BR')+' · '+p.cenas.length+' cena(s)'+(p.perdidas?' · '+p.perdidas+' arquivo(s) para reenviar':'');
+  const b=document.createElement('div');b.className='bar';const o=document.createElement('button');o.textContent='Abrir';o.onclick=()=>openPj(p);
+  const x=document.createElement('button');x.className='s';x.textContent='Excluir';x.onclick=()=>{a.splice(i,1);try{localStorage.setItem('projs',JSON.stringify(a))}catch(e){}loadPj()};
+  b.append(o,x);d.append(t,m,b);L.appendChild(d)})
+}
+$('#pjs').onclick=()=>{
+ const nome=$('#pjn').value.trim()||'Projeto '+new Date().toLocaleDateString('pt-BR');
+ const cenas=scenes.filter(s=>s.gen).map(s=>({head:s.head,dur:s.dur,bg:s.bg,emoji:s.emoji,url:s.url,svg:!!s.el,av:s.av,avpos:s.avpos}));
+ const galeria=scenes.filter(s=>!s.gen).map(s=>({head:s.head,dur:s.dur,start:s.start||0,isV:!!s.isV,av:s.av,avpos:s.avpos}));
+ const cfg={};['mode','fmt','tpl','prod','price','cta','col','avatar','kind','tone','req','sty','neg','fit','nsc','vrate','vsel','vstyle','skin','hair','avpos','avsz','avop','avgest','avmode'].forEach(k=>{const e=$('#'+k);if(e)cfg[k]=e.value});
+ ['cap','nar','mic','vsnd','fitdur','avwave'].forEach(k=>{const e=$('#'+k);if(e)cfg[k]=e.checked});
+ cfg.narLang=window.narLang||'pt-BR';
+ if(!cenas.length&&!galeria.length){$('#pjm').textContent='Não há cenas para salvar. Crie ou adicione cenas primeiro.';return}
+ let a=pjAll().filter(x=>x.nome.toLowerCase()!==nome.toLowerCase());
+ a.unshift({nome,ts:Date.now(),cenas,galeria,cfg,perdidas:galeria.length});
+ a=a.slice(0,30);
+ let ok=false;
+ while(a.length&&!ok){try{localStorage.setItem('projs',JSON.stringify(a));ok=true}catch(e){if(a.length<=1)break;a.pop()}}
+ if(ok){$('#pjn').value='';$('#pjm').textContent='Projeto "'+nome+'" salvo!'+(galeria.length?' Os arquivos da galeria ('+galeria.length+') não ficam salvos: ao reenviar, os textos voltam sozinhos.':'')+(a.length<30&&pjAll().length<a.length?'':'')}
+ else $('#pjm').textContent='Não consegui salvar: sem espaço ou sem permissão de armazenamento neste aparelho.';
+ loadPj()
+};
+function openPj(p){
+ if(playing)stopPlay();
+ const cfg=p.cfg||{};
+ Object.entries(cfg).forEach(([k,v])=>{
+  const e=$('#'+k);if(!e||k==='narLang')return;
+  if(e.type==='checkbox')e.checked=!!v;else e.value=v});
+ window.narLang=cfg.narLang||'pt-BR';
+ /* atualiza botões de escolha e cor, que não seguem o valor sozinhos */
+ const sync=(gid,attr,val)=>{const g=$('#'+gid);if(!g)return;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset[attr]===String(val)))};
+ sync('pav','a',$('#avatar').value);sync('pgrid','p',$('#avpos').value);avLabels();sync('pdur','n',$('#nsc').value);sync('par','f',$('#fmt').value);
+ if($('#pcol'))$('#pcol').value=$('#col').value;
+ scenes.forEach(s=>{if(!s.gen&&s.url){try{URL.revokeObjectURL(s.url)}catch(e){}}});
+ scenes=(p.cenas||[]).map(c=>{const o={isV:false,gen:true,el:null,url:c.url,bg:c.bg||['#1f2937','#4b5563'],emoji:c.emoji||'',head:c.head||'',dur:c.dur||3,start:0,av:c.av,avpos:c.avpos};if(c.svg&&c.url){o.el=new Image();o.el.onload=()=>draw(cur);o.el.src=c.url}return o});
+ window.pendG=(p.galeria||[]).slice();
+ tsel=0;setFmt();$('#adf').style.display=$('#mode').value==='ad'?'':'none';$('#mode').dispatchEvent(new Event('input'));
+ renderList();cur=0;draw(0);go('editor');
+ $('#st').textContent='Projeto "'+p.nome+'" aberto.'+(window.pendG.length?' Adicione de novo as '+window.pendG.length+' foto(s)/vídeo(s) da galeria: os textos voltam sozinhos.':'')
+}
+$('#clr').onclick=()=>{try{['brand','pedidos','projs','cloudv'].forEach(k=>localStorage.removeItem(k))}catch(e){}$('#cfm').textContent='Dados apagados deste aparelho.'};
+$('#tbtn').onclick=async()=>{
+ const txts=scenes.map(s=>s.head);if(!txts.some(t=>t.trim())){$('#st').textContent='Escreva textos nas cenas primeiro.';return}
+ let sm=null;try{sm=await claude.use('sample')}catch(e){}
+ if(!sm){$('#st').textContent='Tradução indisponível neste aparelho.';return}
+ const L=$('#tlang').value,b=$('#tbtn');b.disabled=true;$('#st').textContent='Traduzindo…';
+ try{const r=await sm.json('Traduza cada texto para '+L+', mantendo o sentido e um tom curto. Responda somente JSON: {"textos":["..."]} com exatamente '+txts.length+' itens, na mesma ordem. Textos: '+JSON.stringify(txts),{});
+  (r.textos||[]).forEach((t,i)=>{if(scenes[i]&&txts[i].trim())scenes[i].head=String(t)});
+  window.narLang={'Inglês':'en-US','Espanhol':'es-ES','Francês':'fr-FR','Italiano':'it-IT','Alemão':'de-DE'}[L]||'pt-BR';
+  renderList();draw(cur);$('#st').textContent='Pronto! Textos traduzidos para '+L+'.'}catch(e){$('#st').textContent='Não consegui traduzir agora.'}
+ b.disabled=false
+};
+
+(function(){const _af=addFiles;addFiles=function(files){const n0=scenes.length;_af(files);
+ if(window.pendG&&window.pendG.length){for(let i=n0;i<scenes.length&&window.pendG.length;i++){const g=window.pendG.shift(),s=scenes[i];if(s.gen)continue;s.head=g.head||'';if(g.av!==undefined)s.av=g.av;if(g.avpos)s.avpos=g.avpos;if(g.isV===s.isV){s.dur=g.dur||s.dur;if(s.isV)s.start=g.start||0}}renderList();draw(cur)}}})();
+(function(){const _rl=renderList;renderList=function(){_rl();try{refreshTrsc()}catch(e){}}})();
+/* ===== Transcrição de áudio (microfone) ===== */
+const SRC=window.SpeechRecognition||window.webkitSpeechRecognition;
+let srec=null,wantListen=false,finalTxt='';
+const trmsg=m=>{$('#trmsg').textContent=m};
+function refreshTrsc(){const sel=$('#trsc');if(!sel)return;const keep=sel.value;sel.innerHTML='';
+ scenes.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent='Cena '+(i+1)+(s.head?' · '+s.head.slice(0,24):'');sel.appendChild(o)});
+ if(keep&&sel.options[keep])sel.value=keep}
+function trDest(){$('#trsw').style.display=$('#trdest').value==='scene'?'':'none';refreshTrsc()}
+$('#trdest').addEventListener('change',trDest);trDest();
+function stopListen(){wantListen=false;try{srec&&srec.stop()}catch(e){}$('#trbtn').textContent='🎤 Começar a transcrever'}
+function startListen(){
+ if(!SRC){trmsg('Este navegador não faz transcrição por voz. Use o Chrome (Android ou computador) ou o Safari atualizado.');return}
+ finalTxt=$('#trtxt').value.trim();
+ srec=new SRC();srec.lang=$('#trlang').value;srec.continuous=true;srec.interimResults=true;
+ srec.onresult=e=>{let interim='';
+  for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;
+   if(e.results[i].isFinal)finalTxt=(finalTxt?finalTxt+' ':'')+t.trim();else interim+=t}
+  $('#trtxt').value=(finalTxt+(interim?(finalTxt?' ':'')+interim:'')).trim()};
+ srec.onerror=e=>{if(e.error==='no-speech'||e.error==='aborted')return;
+  const m={'not-allowed':'Sem permissão para o microfone. Libere o microfone nas permissões do navegador.','service-not-allowed':'O navegador bloqueou o reconhecimento de voz neste aparelho.','audio-capture':'Microfone não encontrado.','network':'Sem internet: a transcrição precisa de conexão.'}[e.error];
+  trmsg(m||'Erro na transcrição ('+e.error+').');
+  if(e.error==='not-allowed'||e.error==='service-not-allowed'||e.error==='audio-capture')stopListen()};
+ srec.onend=()=>{if(wantListen){try{finalTxt=$('#trtxt').value.trim();srec.start()}catch(e){stopListen()}}
+  else{$('#trbtn').textContent='🎤 Começar a transcrever';if($('#trtxt').value.trim())trmsg('Pronto. Corrija se precisar e toque em Usar este texto.')}};
+ try{wantListen=true;srec.start();$('#trbtn').textContent='■ Parar de transcrever';trmsg('Ouvindo… fale agora.')}
+ catch(e){wantListen=false;trmsg('Não consegui iniciar o microfone.')}}
+$('#trbtn').onclick=()=>{if(playing)stopPlay();if(wantListen)stopListen();else startListen()};
+$('#trclr').onclick=()=>{finalTxt='';$('#trtxt').value='';trmsg('')};
+const TRPAL=[['#1e3a8a','#6d28d9'],['#7c2d12','#be123c'],['#064e3b','#0e7490'],['#4c1d95','#be185d'],['#1f2937','#4b5563']];
+$('#truse').onclick=()=>{
+ if(wantListen)stopListen();
+ const txt=$('#trtxt').value.trim();if(!txt){trmsg('Não há texto para usar. Fale ou digite primeiro.');return}
+ const d=$('#trdest').value;
+ if(d==='req'){const r=$('#req');r.value=(r.value.trim()?r.value.trim()+' ':'')+txt;trmsg('Texto enviado para o pedido da IA (módulo Criar com IA).')}
+ else if(d==='scene'){
+  if(!scenes.length){trmsg('Ainda não há cenas. Adicione fotos ou crie com IA primeiro.');return}
+  const k=+$('#trsc').value||0;scenes[k].head=txt.slice(0,140);renderList();draw(cur);trmsg('Texto colocado na cena '+(k+1)+'.')}
+ else{
+  const parts=txt.split(/(?<=[.!?…])\s+/).map(x=>x.trim()).filter(Boolean);let n=0;
+  parts.forEach((p,j)=>{
+   if(j<scenes.length){scenes[j].head=p.slice(0,140);n++}
+   else if(scenes.length<10){const c=TRPAL[scenes.length%TRPAL.length];scenes.push(mkGen({texto:p.slice(0,140),emoji:'🎙️',cor1:c[0],cor2:c[1]}));n++}});
+  renderList();cur=0;draw(0);
+  trmsg(n+' cena(s) preenchida(s)'+(n<parts.length?'. O limite é 10 cenas; '+(parts.length-n)+' frase(s) ficaram de fora.':'.'))}
+};
+
+/* ===== Boneco que fala: voz sintética + sua voz ===== */
+const TTS_OK=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window),TTS=TTS_OK?window.speechSynthesis:null;
+const STY={neutra:{p:1,r:1,g:null},fem:{p:1.04,r:1,g:'f'},masc:{p:.94,r:.98,g:'m'},inf:{p:1.3,r:1.06,g:'f'},grave:{p:.82,r:.93,g:'m'},aguda:{p:1.25,r:1.05,g:'f'},robo:{p:.4,r:.95,g:'m'},alegre:{p:1.12,r:1.08,g:null},calma:{p:.97,r:.9,g:null}};
+const AVSTY={none:'neutra',pessoa:'neutra',mulher:'fem',crianca:'inf',vovo:'grave',astronauta:'masc',robo:'robo',alien:'aguda',gato:'aguda',cachorro:'alegre',panda:'calma'};
+const FEM=/lu[ií]sa?na|francisca|maria|fernanda|camila|vit[oó]ria|joana|helena|zira|samantha|karen|m[oó]nica|paulina|am[eé]lie|alice|elsa|anna|\bfemale\b|femin|woman|mulher/i,MAS=/felipe|ricardo|daniel|jorge|ant[oó]nio|diego|pablo|thomas|david|\bmark\b|alex|fred|luca|markus|\bmale\b|mascul|\bman\b|homem/i;
+function voiceParams(){let s=$('#vstyle').value;if(!s||s==='auto')s=AVSTY[$('#avatar').value]||'neutra';const y=STY[s]||STY.neutra,r=+$('#vrate').value||1;return{pitch:Math.max(.1,Math.min(2,y.p)),rate:Math.max(.5,Math.min(2,r*y.r)),g:y.g}}
+const spk={on:false};let spkQ=0,spkT=0,ttsUnlocked=false,micStream=null,micAn=null,narTouched=false;
+const adMode=()=>$('#mode').value==='ad';
+const sceneText=(s,i)=>s.head.trim()||(i===0&&adMode()?$('#prod').value.trim():'');
+function speechMode(){return $('#nar').checked&&(TTS_OK||cloudOn())&&!(recording&&$('#mic').checked)}
+function talkNow(head,lt,s){updMic();if(spk.on||window.micLvl>.03)return true;if(speechMode())return false;return !!head&&lt<s.dur-.4}
+function unlockTTS(){if(!TTS_OK||ttsUnlocked)return;try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;TTS.speak(u);ttsUnlocked=true}catch(e){}}
+function stopSpeak(){spkQ++;clearTimeout(spkT);cloudStop();spk.on=false;try{TTS_OK&&TTS.cancel()}catch(e){}}
+function vScore(v){const n=v.name+' '+v.voiceURI;let sc=0;
+ if(/natural|neural/i.test(n))sc+=50;if(/premium|enhanced|aprimorad/i.test(n))sc+=40;if(/online|google|siri/i.test(n))sc+=25;
+ if(v.localService===false)sc+=10;if(/compact|espeak/i.test(n))sc-=40;
+ if(v.lang.toLowerCase().replace('_','-')===(window.narLang||'pt-BR').toLowerCase())sc+=8;return sc}
+function fillVoices(){
+ if(!TTS_OK)return;const sel=$('#vsel'),keep=sel.value,lg=(window.narLang||'pt-BR').toLowerCase().slice(0,2);
+ let vs=[];try{vs=TTS.getVoices().filter(v=>v.lang.toLowerCase().replace('_','-').startsWith(lg))}catch(e){}
+ vs.sort((a,b)=>vScore(b)-vScore(a));
+ sel.innerHTML='<option value="">Automática (melhor voz disponível)</option>';
+ vs.forEach(v=>{const o=document.createElement('option');o.value=v.voiceURI;o.textContent=(vScore(v)>=25?'★ ':'')+v.name;sel.appendChild(o)});
+ if(keep&&[...sel.options].some(o=>o.value===keep))sel.value=keep
+}
+function pickVoice(lang,g){
+ let vs=[];try{vs=TTS.getVoices()}catch(e){}
+ const w=$('#vsel').value;let v=w&&vs.find(x=>x.voiceURI===w);if(v)return v;
+ const l=lang.toLowerCase().replace('_','-');
+ let pool=vs.filter(x=>x.lang.toLowerCase().replace('_','-')===l);
+ if(!pool.length)pool=vs.filter(x=>x.lang.toLowerCase().startsWith(l.slice(0,2)));
+ if(!pool.length)return null;
+ pool.sort((a,b)=>vScore(b)-vScore(a));
+ if(g){const re=g==='f'?FEM:MAS,ot=g==='f'?MAS:FEM,m=pool.find(x=>re.test(x.name));if(m)return m;const n=pool.filter(x=>!ot.test(x.name));if(n.length)return n[0]}
+ return pool[0]
+}
+function prepSpeech(t,lang){
+ t=t.replace(/\p{Extended_Pictographic}|️/gu,'');
+ if(/^pt/i.test(lang))t=t.replace(/R\$\s*(\d+(?:[.,]\d+)?)/g,'$1 reais').replace(/(\d)\s*%/g,'$1 por cento').replace(/&/g,' e ');
+ return t.replace(/\s+/g,' ').trim()
+}
+function sentenceTone(pt){const q=/\?\s*$/.test(pt),ex=/!\s*$/.test(pt);
+ return{r:ex?1.03:q?.99:.97+Math.random()*.06,p:q?1.06:ex?1.05:.98+Math.random()*.04}}
+function chunks140(t){
+ const out=[];(t.match(/[^.!?…]+[.!?…]*/g)||[t]).forEach(p=>{p=p.trim();while(p.length>160){let k=p.lastIndexOf(',',160);if(k<40)k=p.lastIndexOf(' ',160);if(k<40)k=160;out.push(p.slice(0,k+1).trim());p=p.slice(k+1).trim()}if(p)out.push(p)});return out
+}
+function narrateDevice(text,onend){
+ if(!TTS_OK||!text)return false;
+ try{TTS.cancel()}catch(e){}
+ text=prepSpeech(text,window.narLang||'pt-BR');if(!text)return false;
+ const id=++spkQ,lang=window.narLang||'pt-BR',vp=voiceParams(),rate=vp.rate,parts=chunks140(text);let left=parts.length;
+ clearTimeout(spkT);spk.on=true;
+ const fin=()=>{if(id!==spkQ)return;spk.on=false;clearTimeout(spkT);if(onend)onend()};
+ spkT=setTimeout(fin,(text.length/(14*rate)+2)*1000);
+ setTimeout(()=>{
+  if(id!==spkQ)return;
+  parts.forEach(pt=>{
+   let done=false;const u=new SpeechSynthesisUtterance(pt),tn=sentenceTone(pt);u.lang=lang;u.rate=Math.max(.5,Math.min(2,rate*tn.r));u.pitch=Math.max(.1,Math.min(2,vp.pitch*tn.p));
+   const v=pickVoice(lang,vp.g);if(v){u.voice=v;u.lang=v.lang}
+   const end=()=>{if(done||id!==spkQ)return;done=true;if(--left<=0)fin()};
+   u.onend=end;u.onerror=end;
+   try{TTS.speak(u)}catch(e){end()}
+  })
+ },80);
+ return true
+}
+function sceneNarrate(s,i){if(!speechMode())return;const t=sceneText(s,i);if(!t){stopSpeak();return}narrate(t)}
+function fitDurations(){
+ if(!speechMode()||!$('#fitdur').checked||cloudOn())return;
+ const rate=voiceParams().rate;let ch=false;
+ scenes.forEach((s,i)=>{const t=sceneText(s,i);if(!t)return;const need=Math.min(30,Math.max(2,t.length/(14*rate)+.8));if(s.dur<need){s.dur=Math.round(need*2)/2;ch=true}});
+ if(ch)renderList()
+}
+function setupMic(ms){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();const src=actx.createMediaStreamSource(ms),an=actx.createAnalyser();an.fftSize=512;src.connect(an);micAn={an,buf:new Uint8Array(an.fftSize)}}catch(e){micAn=null}}
+function updMic(){if(!micAn){window.micLvl=0;return}try{micAn.an.getByteTimeDomainData(micAn.buf);let s=0;for(const v of micAn.buf){const x=(v-128)/128;s+=x*x}window.micLvl=Math.sqrt(s/micAn.buf.length)}catch(e){window.micLvl=0}}
+function stopMic(){try{micStream&&micStream.getTracks().forEach(t=>t.stop())}catch(e){}micStream=null;micAn=null;window.micLvl=0}
+function setAvatar(a){$('#avatar').value=a;const g=$('#pav');if(g)g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.a===a));draw(cur);autoNar()}
+function sayLoop(){if((spk.on||cloudBusy)&&!playing){draw(cur);requestAnimationFrame(sayLoop)}}
+function addSayScene(t){scenes.push(mkGen({texto:t.slice(0,140),emoji:'🎙️',cor1:'#1e3a8a',cor2:'#6d28d9'}));renderList();cur=0;draw(0)}
+$('#saybtn').onclick=()=>{
+ const m=$('#saymsg');
+ if(spk.on){stopSpeak();$('#saybtn').textContent='🗣 Falar';draw(cur);return}
+ const t=$('#say').value.trim();
+ if(!TTS_OK&&!cloudOn()){m.textContent='Este navegador não tem voz sintética. Marque “Gravar minha voz” e fale: o boneco mexe a boca com o som da sua voz.';return}
+ if(!t){m.textContent='Escreva o que o boneco deve falar.';return}
+ if($('#avatar').value==='none')setAvatar('pessoa');
+ if(playing)stopPlay();
+ unlockTTS();fillVoices();if(!scenes.length)addSayScene(t);
+ m.textContent='';$('#saybtn').textContent='■ Parar';
+ narrate(t,()=>{$('#saybtn').textContent='🗣 Falar';draw(cur)});sayLoop()
+};
+$('#sayadd').onclick=()=>{
+ const t=$('#say').value.trim();if(!t){$('#saymsg').textContent='Escreva o texto primeiro.';return}
+ if($('#avatar').value==='none')setAvatar('pessoa');
+ addSayScene(t);$('#saymsg').textContent='Cena criada. Veja a prévia: o boneco fala o texto da cena.'
+};
+$('#anar').onchange=()=>{narTouched=true;$('#nar').checked=$('#anar').checked;if(!$('#anar').checked)stopSpeak()};
+$('#nar').addEventListener('change',()=>{narTouched=true;$('#anar').checked=$('#nar').checked});
+const autoNar=()=>setTimeout(()=>{if($('#avatar').value!=='none'&&!narTouched&&TTS_OK){$('#nar').checked=true;$('#anar').checked=true;narTouched=true}},0);
+$('#pav').addEventListener('click',autoNar);$('#avatar').addEventListener('change',autoNar);
+['vsel'].forEach(id=>['focus','mousedown','touchstart'].forEach(ev=>$('#'+id).addEventListener(ev,fillVoices)));
+if(TTS_OK){fillVoices();try{TTS.addEventListener('voiceschanged',fillVoices)}catch(e){TTS.onvoiceschanged=fillVoices}}
+else{$('#saymsg').textContent='Este aparelho não tem voz sintética no navegador. Use “Gravar minha voz”: o boneco mexe a boca com a sua voz.'}
+
+const SAMPLE={pt:'Olá! Esta é a minha voz.',en:'Hello! This is my voice.',es:'¡Hola! Esta es mi voz.',fr:'Bonjour ! Ceci est ma voix.',it:'Ciao! Questa è la mia voce.',de:'Hallo! Das ist meine Stimme.'};
+$('#vtest').onclick=()=>{
+ const m=$('#saymsg');
+ if(spk.on){stopSpeak();$('#saybtn').textContent='🗣 Falar';draw(cur);return}
+ if(!TTS_OK&&!cloudOn()){m.textContent='Este navegador não tem voz sintética.';return}
+ if($('#avatar').value==='none')setAvatar('pessoa');
+ if(playing)stopPlay();
+ unlockTTS();fillVoices();if(!scenes.length)addSayScene(SAMPLE[(window.narLang||'pt-BR').slice(0,2)]||SAMPLE.pt);
+ m.textContent='';narrate(SAMPLE[(window.narLang||'pt-BR').slice(0,2)]||SAMPLE.pt,()=>draw(cur));sayLoop()
+};
+['skin','hair'].forEach(id=>$('#'+id).addEventListener('input',()=>draw(cur)));
+$('#pav').addEventListener('click',()=>setTimeout(()=>draw(cur),0));
+(function(){const _g=go;go=function(v,f){_g(v,f);$('#anar').checked=$('#nar').checked}})();
+
+/* ===== Boneco: posição, tamanho, gestos e cenas ===== */
+const POSG={tl:[0,0],tc:[.5,0],tr:[1,0],ml:[0,.5],mc:[.5,.5],mr:[1,.5],bl:[0,1],bc:[.5,1],br:[1,1]};
+const ARM={robo:['#9ca3af','#d4d8de'],gato:['#e9a86b','#e9a86b'],cachorro:['#d9a066','#d9a066'],panda:['#1f2937','#1f2937'],alien:['#4ade80','#4ade80'],astronauta:['#e5e7eb','#f8fafc']};
+let avE=0,avLast=0;
+const avc=document.createElement('canvas');
+function avCfg(){return{pos:$('#avpos').value||'bc',sz:(+$('#avsz').value||80)/100,op:(+$('#avop').value||100)/100,amp:[0,.5,.85,1.25][+$('#avgest').value]??.85,wave:$('#avwave').checked}}
+function avVisible(s,i){const m=$('#avmode').value;if(m==='marked')return s.av===true;if(s.av===false)return false;if(m==='talk')return !!sceneText(s,i);return true}
+function avGeom(W,H,pos){const c=avCfg(),g=POSG[pos]||POSG.bc,R=Math.min(W,H)*.13*c.sz,mx=R*2+W*.02;
+ const anch=g[1]===1;return{R,anch,cx:g[0]===.5?W/2:g[0]===0?mx:W-mx,cy:anch?H-R*1.75:g[1]===.5?H/2:R*1.6+Math.max(H*.12,W*.16)}}
+function avShift(s,i,W,H){if(!avVisible(s,i))return 0;const q=avGeom(W,H,s.avpos||$('#avpos').value);return q.anch?q.R*2.77:0}
+function avFade(s,i,lt){const pv=i>0&&avVisible(scenes[i-1],i-1),nx=i<scenes.length-1&&avVisible(scenes[i+1],i+1);let f=1;
+ if(!pv)f=Math.min(f,ease(lt/.4));if(!nx)f=Math.min(f,ease((s.dur-lt)/.35));return f}
+function avBox(s){const l=document.createElement('label');l.style.cssText='grid-column:1/-1;display:flex;gap:8px;align-items:center;margin:2px 0;color:var(--tx);font-size:13px';
+ const c=document.createElement('input');c.type='checkbox';c.style.cssText='width:20px;height:20px';
+ c.checked=$('#avmode').value==='marked'?s.av===true:s.av!==false;c.onchange=()=>{s.av=c.checked;draw(cur)};l.append(c,'Boneco nesta cena');return l}
+function drawArms(k,cx,cy,R,t,lt,P){
+ const am=P.amp,e=avE*am,ph=t*(2+am*1.2),skin=($('#skin')||{}).value||'#f1c9a5',c=ARM[k]||[P.col,skin];
+ const hand=(side,sd)=>{
+  const bx=cx+side*R*(1.38+.04*Math.sin(t*1.2+sd)),by=cy+R*(1.78+.04*Math.sin(t*1.7+sd));
+  if(!e)return{x:bx,y:by};
+  const b=Math.pow(Math.max(0,Math.sin(ph*(.9+.15*sd)+sd*2.1)),1.4),w=.5+.5*Math.sin(ph*2.3+sd);
+  return{x:bx+side*R*(.3*b+.08*w),y:by-R*e*(1.1*b+.12*w)}};
+ const Lh=hand(-1,0),Rh=hand(1,1.7);
+ if(P.wave&&am>0&&lt<1.8){const w=Math.min(1,lt/.25)*Math.min(1,(1.8-lt)/.3);
+  if(w>0){const wx=cx+R*1.7+Math.sin(t*11)*R*.3,wy=cy+R*.05;Rh.x+=(wx-Rh.x)*w;Rh.y+=(wy-Rh.y)*w}}
+ ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+ [[-1,Lh],[1,Rh]].forEach(([sd,h])=>{
+  const sx=cx+sd*R,sy=cy+R*1.4,ex=(sx+h.x)/2+sd*R*.32,ey=(sy+h.y)/2+R*.12;
+  ctx.strokeStyle=c[0];ctx.lineWidth=R*.34;ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(ex,ey,h.x,h.y);ctx.stroke();
+  ctx.fillStyle=c[1];ctx.beginPath();ctx.arc(h.x,h.y,R*.21,0,7);ctx.fill()});
+ ctx.restore()
+}
+function drawAvatar(k,W,H,t,talk,col,s,i,lt){
+ const c=avCfg(),q=avGeom(W,H,s.avpos||c.pos),f=avFade(s,i,lt),a=c.op*f;
+ const now=performance.now(),dt=Math.min(.1,Math.max(0,(now-avLast)/1000));avLast=now;
+ avE+=((talk?1:0)-avE)*(1-Math.exp(-dt*9));
+ if(a<=.01)return;
+ const P={R:q.R,cx:q.cx,cy:q.cy,anchored:q.anch,amp:c.amp,wave:c.wave,dy:(1-f)*q.R*.5};
+ if(a>=.99){drawAvatarRaw(k,W,H,t,talk,col,P,lt);return}
+ if(avc.width!==W||avc.height!==H){avc.width=W;avc.height=H}
+ const x=avc.getContext('2d');x.clearRect(0,0,W,H);ctx=x;
+ try{drawAvatarRaw(k,W,H,t,talk,col,P,lt)}finally{ctx=mainCtx}
+ ctx.save();ctx.globalAlpha=a;ctx.drawImage(avc,0,0);ctx.restore()
+}
+function avLabels(){$('#avszv').textContent=$('#avsz').value+'%';$('#avopv').textContent=$('#avop').value+'%'}
+function syncGrid(){document.querySelectorAll('#pgrid button').forEach(b=>b.classList.toggle('on',b.dataset.p===$('#avpos').value))}
+$('#pgrid').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#avpos').value=b.dataset.p;syncGrid();if($('#avatar').value==='none')setAvatar('pessoa');draw(cur)};
+['avsz','avop'].forEach(id=>$('#'+id).addEventListener('input',()=>{avLabels();draw(cur)}));
+['avgest','avwave'].forEach(id=>$('#'+id).addEventListener('change',()=>draw(cur)));
+$('#avmode').addEventListener('change',()=>{renderList();draw(cur)});
+$('#avtest').onclick=()=>{
+ if($('#avatar').value==='none')setAvatar('pessoa');
+ if(playing){stopPlay();return}
+ if(!scenes.length)addSayScene('Olá! Eu sou o seu boneco. Veja como eu mexo as mãos e a cabeça enquanto falo.');
+ if($('#avmode').value==='marked'&&!scenes.some(x=>x.av===true))scenes[0].av=true;
+ renderList();startPlayC()
+};
+
+/* ===== Voz realista (OpenAI / ElevenLabs) ===== */
+var cloudBroken=false,cloudBusy=false,cloudSrc=null;
+const cbuf=new Map();
+const OAV=[['alloy','Alloy · neutra'],['nova','Nova · feminina'],['shimmer','Shimmer · feminina suave'],['coral','Coral · feminina'],['echo','Echo · masculina'],['onyx','Onyx · masculina grave'],['ash','Ash · masculina'],['sage','Sage · calma'],['fable','Fable · expressiva']];
+const OAVA={none:'alloy',pessoa:'alloy',mulher:'nova',crianca:'shimmer',vovo:'onyx',astronauta:'echo',robo:'echo',alien:'fable',gato:'coral',cachorro:'ash',panda:'sage'};
+const ELV=[['EXAVITQu4vr4xnSDxMaL','Bella','f'],['21m00Tcm4TlvDq8ikWAM','Rachel','f'],['AZnzlk1XvdvUeBnXmlld','Domi','f'],['MF3mGyEYCl7XYWbV9V6O','Elli','f'],['pNInz6obpgDQGcFmaJgB','Adam','m'],['ErXwobaYiN019PkySvjV','Antoni','m'],['TxGEqnHWrfWFTfGW9XjX','Josh','m'],['VR6AewLTigWG4xSOukaG','Arnold','m']];
+let elvList=ELV.slice();
+const cmsg=t=>{const e=$('#cmsg');if(e)e.textContent=t};
+function cloudOn(){return $('#vprov').value!=='device'&&$('#vkey').value.trim().length>8&&!cloudBroken}
+function ensureAudio(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();adest=adest||actx.createMediaStreamDestination()}catch(e){}}
+function cloudVoice(){
+ const v=$('#vcv').value;if(v)return v;
+ const vp=voiceParams(),av=$('#avatar').value;
+ if($('#vprov').value==='openai'){
+  if($('#vstyle').value!=='auto'&&vp.g)return vp.g==='f'?'nova':'onyx';
+  return OAVA[av]||'alloy'}
+ const g=vp.g||({mulher:'f',crianca:'f',gato:'f',alien:'f'}[av])||'m';
+ return (elvList.find(x=>x[2]===g)||elvList[0])[0]
+}
+function cloudInstr(){
+ const lang={'pt-BR':'português do Brasil','en-US':'inglês','es-ES':'espanhol','fr-FR':'francês','it-IT':'italiano','de-DE':'alemão'}[window.narLang||'pt-BR']||'português do Brasil';
+ const sty={inf:'voz infantil, aguda e animada',grave:'voz grave',aguda:'voz mais aguda',robo:'voz levemente robótica',alegre:'bem alegre e animada',calma:'calma e lenta'}[$('#vstyle').value]||'';
+ return 'Fale em '+lang+' com pronúncia e sotaque naturais, como uma pessoa de verdade conversando. Tom '+(($('#tone')||{}).value||'alegre').toLowerCase()+(sty?', '+sty:'')+'. Faça pausas naturais e varie a entonação.'
+}
+function cloudWhy(e){const c=e&&e.status;
+ return c===401||c===403?'chave recusada':c===429?'limite ou saldo esgotado':c===402?'plano sem acesso a essa voz':(e&&e.name==='TypeError')?'conexão bloqueada pela rede ou pelo navegador':'erro '+(c||(e&&e.message)||'desconhecido')}
+function cloudFail(e){cloudBroken=true;const m='Não consegui usar a voz realista ('+cloudWhy(e)+'). Usando a voz do aparelho.';cmsg(m);$('#st').textContent=m}
+async function cloudBuf(text){
+ const pv=$('#vprov').value,vid=cloudVoice(),ins=pv==='openai'?cloudInstr():'',key=pv+'|'+vid+'|'+ins+'|'+text;
+ if(cbuf.has(key))return cbuf.get(key);
+ ensureAudio();const k=$('#vkey').value.trim();let r;
+ if(pv==='openai'){
+  const go1=m=>fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':'Bearer '+k,'Content-Type':'application/json'},body:JSON.stringify(m==='tts-1'?{model:m,voice:vid,input:text,response_format:'mp3'}:{model:m,voice:vid,input:text,instructions:ins,response_format:'mp3'})});
+  r=await go1('gpt-4o-mini-tts');if(r.status===400||r.status===404)r=await go1('tts-1')
+ }else{
+  r=await fetch('https://api.elevenlabs.io/v1/text-to-speech/'+encodeURIComponent(vid)+'?output_format=mp3_44100_128',{method:'POST',headers:{'xi-api-key':k,'Content-Type':'application/json'},body:JSON.stringify({text,model_id:'eleven_multilingual_v2',voice_settings:{stability:.45,similarity_boost:.8,style:.2,use_speaker_boost:true}})})
+ }
+ if(!r.ok){const er=new Error('http');er.status=r.status;throw er}
+ const ab=await r.arrayBuffer(),buf=await new Promise((res,rej)=>{const q=actx.decodeAudioData(ab,res,rej);if(q&&q.catch)q.catch(rej)});
+ cbuf.set(key,buf);if(cbuf.size>60)cbuf.delete(cbuf.keys().next().value);return buf
+}
+function cloudStop(){if(cloudSrc){const x=cloudSrc;cloudSrc=null;try{x.onended=null;x.stop()}catch(e){}if(micAn&&micAn._c)micAn=null}cloudBusy=false}
+function playBuf(buf,id,onend){
+ ensureAudio();if(actx.state==='suspended')actx.resume();
+ const src=actx.createBufferSource();src.buffer=buf;src.playbackRate.value=Math.max(.8,Math.min(1.25,+$('#vrate').value||1));
+ const an=actx.createAnalyser();an.fftSize=512;const g=actx.createGain();
+ src.connect(g);g.connect(an);g.connect(actx.destination);if(adest)g.connect(adest);
+ const mine={an:an,buf:new Uint8Array(an.fftSize),_c:1};
+ if(!(recording&&$('#mic').checked))micAn=mine;
+ cloudSrc=src;spk.on=true;
+ src.onended=()=>{if(cloudSrc===src)cloudSrc=null;if(micAn===mine)micAn=null;if(id===spkQ){spk.on=false;if(onend)onend()}};
+ src.start()
+}
+async function narrateCloud(text,onend){
+ const id=++spkQ;clearTimeout(spkT);cloudStop();try{TTS_OK&&TTS.cancel()}catch(e){}
+ text=prepSpeech(text,window.narLang||'pt-BR');if(!text)return false;
+ cloudBusy=true;let buf;
+ try{buf=await cloudBuf(text)}catch(e){cloudBusy=false;if(id!==spkQ)return false;cloudFail(e);return narrateDevice(text,onend)}
+ cloudBusy=false;if(id!==spkQ)return false;
+ cmsg('Voz realista funcionando.');playBuf(buf,id,onend);return true
+}
+function narrate(text,onend){return cloudOn()?(narrateCloud(text,onend),true):narrateDevice(text,onend)}
+async function prepCloud(){
+ if(!cloudOn())return;
+ const lang=window.narLang||'pt-BR',rate=Math.max(.8,Math.min(1.25,+$('#vrate').value||1));
+ const items=scenes.map((s,i)=>[s,sceneText(s,i)]).filter(x=>x[1]);if(!items.length)return;
+ let k=0;$('#st').textContent='Gerando a voz realista… 0/'+items.length;
+ for(const it of items){
+  try{const b=await cloudBuf(prepSpeech(it[1],lang));k++;$('#st').textContent='Gerando a voz realista… '+k+'/'+items.length;
+   if($('#fitdur').checked){const need=Math.min(30,Math.ceil((b.duration/rate+.5)*2)/2);if(it[0].dur<need)it[0].dur=need}}
+  catch(e){cloudFail(e);break}
+ }
+ renderList()
+}
+async function startPlayC(){
+ if(!scenes.length)return;
+ if(cloudOn()){ensureAudio();if(actx.state==='suspended')actx.resume();unlockTTS();$('#bp').disabled=true;try{await prepCloud()}finally{$('#bp').disabled=false}}
+ startPlay()
+}
+function fillCloudVoices(){
+ const sel=$('#vcv'),keep=sel.value,pv=$('#vprov').value;sel.innerHTML='<option value="">Automática (combina com o boneco)</option>';
+ (pv==='openai'?OAV:elvList.map(x=>[x[0],x[1]])).forEach(x=>{const o=document.createElement('option');o.value=x[0];o.textContent=x[1];sel.appendChild(o)});
+ if(keep){if(![...sel.options].some(o=>o.value===keep)){const o=document.createElement('option');o.value=keep;o.textContent=keep;sel.appendChild(o)}sel.value=keep}
+}
+function cloudUI(){const pv=$('#vprov').value;$('#cloudbox').style.display=pv==='device'?'none':'';$('#vload').style.display=pv==='eleven'?'':'none';fillCloudVoices()}
+function saveCloud(){try{localStorage.setItem('cloudv',JSON.stringify({prov:$('#vprov').value,key:$('#vkey').value,voice:$('#vcv').value}))}catch(e){}}
+function cloudChanged(){cloudBroken=false;cbuf.clear();saveCloud();if(cloudOn()){$('#nar').checked=true;$('#anar').checked=true;narTouched=true}}
+$('#vprov').onchange=()=>{$('#vcv').value='';cloudUI();cloudChanged();cmsg('')};
+$('#vkey').addEventListener('change',()=>{cloudChanged();cmsg('')});
+$('#vcv').addEventListener('change',()=>{cloudChanged()});
+$('#vkclr').onclick=()=>{$('#vkey').value='';cloudChanged();cmsg('Chave apagada deste aparelho.')};
+$('#vctest').onclick=()=>{cloudBroken=false;if(!cloudOn()){cmsg('Cole sua chave de acesso primeiro.');return}cmsg('Gerando a voz…');$('#vtest').click()};
+$('#vload').onclick=async()=>{
+ const k=$('#vkey').value.trim();if(k.length<9){cmsg('Cole sua chave de acesso primeiro.');return}
+ cmsg('Carregando vozes…');
+ try{const r=await fetch('https://api.elevenlabs.io/v1/voices',{headers:{'xi-api-key':k}});if(!r.ok){const er=new Error('http');er.status=r.status;throw er}
+  const j=await r.json(),vs=(j.voices||[]).map(v=>[v.voice_id,v.name,((v.labels||{}).gender||'')[0]==='f'?'f':'m']);
+  if(!vs.length){cmsg('Nenhuma voz encontrada na sua conta.');return}
+  elvList=vs;fillCloudVoices();cmsg(vs.length+' voz(es) carregada(s).')}
+ catch(e){cmsg('Não consegui carregar as vozes ('+cloudWhy(e)+').')}
+};
+try{const sv=JSON.parse(localStorage.getItem('cloudv')||'null');if(sv){$('#vprov').value=sv.prov||'device';$('#vkey').value=sv.key||'';cloudUI();if(sv.voice)$('#vcv').value=sv.voice;if(cloudOn()){$('#nar').checked=true;$('#anar').checked=true;narTouched=true}}else cloudUI()}catch(e){cloudUI()}
+
+/* ===== Gestor de Tráfego IA ===== */
+var TC=[],TCi=0,trfBusy=false;const TV={};
+const tL=()=>{try{return JSON.parse(localStorage.getItem('trfcli')||'[]')}catch(e){return[]}};
+const tS=()=>{try{localStorage.setItem('trfcli',JSON.stringify(TC))}catch(e){}};
+const tE=(t,a,...k)=>{const e=document.createElement(t);Object.assign(e,a||{});k.flat().forEach(x=>e.append(x));return e};
+const brl=n=>'R$ '+(+n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const TF=['tcn','tcnicho','tcof','tcpub','tcurl','tcbud','tcobj','tcdif','tcpr'];
+function tCur(){return TC[TCi]}
+function tRead(){const c=tCur();if(!c)return;TF.forEach(k=>c[k]=$('#'+k).value);c.pl=[...document.querySelectorAll('#tcpl input:checked')].map(x=>x.value);c.av=$('#tcav').checked;c.met=$('#tmet').value;tS()}
+function tFill(){const c=tCur()||{};TF.forEach(k=>{$('#'+k).value=c[k]!==undefined?c[k]:(k==='tcbud'?1500:'')});
+ document.querySelectorAll('#tcpl input').forEach(x=>x.checked=(c.pl||['Meta','TikTok','Google']).includes(x.value));
+ $('#tcav').checked=c.av!==false;$('#tmet').value=c.met||'';tPlan();$('#tout').innerHTML=''}
+function tSel(){const s=$('#tcsel');s.innerHTML='';TC.forEach((c,i)=>{const o=tE('option',{value:i,textContent:c.tcn||'Cliente sem nome'});s.appendChild(o)});s.value=TCi}
+function trfOpen(){TC=tL();if(!TC.length)TC=[{id:Date.now()}];TCi=Math.min(TCi,TC.length-1);tSel();tFill()}
+$('#tcsel').onchange=()=>{tRead();TCi=+$('#tcsel').value;tFill()};
+$('#tcnew').onclick=()=>{tRead();TC.push({id:Date.now()});TCi=TC.length-1;tS();tSel();tFill()};
+$('#tcdel').onclick=()=>{if(!confirm('Excluir este cliente e o plano dele?'))return;TC.splice(TCi,1);if(!TC.length)TC=[{id:Date.now()}];TCi=0;tS();tSel();tFill()};
+TF.concat(['tcav','tmet']).forEach(k=>$('#'+k).addEventListener('change',()=>{tRead();tSel();$('#tcsel').value=TCi}));
+$('#tcpl').addEventListener('change',tRead);
+
+async function trfAI(prompt){let sm=null;try{sm=await claude.use('sample')}catch(e){}if(!sm)throw new Error('noai');return sm.json(prompt)}
+function tCtx(c){return 'Cliente: '+(c.tcn||'-')+'. Nicho: '+(c.tcnicho||'-')+'. Oferta: '+(c.tcof||'-')+'. Público/região: '+(c.tcpub||'-')+'. Link: '+(c.tcurl||'-')+'. Verba mensal: R$ '+(c.tcbud||0)+'. Objetivo: '+(c.tcobj||'Vendas')+'. Plataformas: '+(c.pl||[]).join(', ')+'. Diferenciais/restrições: '+(c.tcdif||'-')+'. Ticket médio: '+(c.tcpr||'não informado')+'.'}
+
+$('#tcgen').onclick=async()=>{
+ tRead();const c=tCur();if(!c.tcof||!(c.pl||[]).length){$('#tcst').textContent='Preencha pelo menos a oferta e escolha uma plataforma.';return}
+ if(trfBusy)return;trfBusy=true;$('#tcgen').disabled=true;$('#tcst').textContent='A IA está montando o plano… pode levar até 1 minuto.';
+ const schema='{"resumo":"","plataformas":[{"nome":"Meta|TikTok|Google","objetivo":"","estrutura":"","orcamento_diario":0,"publicos":[""],"posicionamentos":"","palavras_chave":[""],"negativas":[""],"criativos":[{"nome":"","gancho":"","texto_principal":"","titulo":"","descricao":"","cta":"","formato":"9:16","cenas":[{"texto":"","emoji":"","cor1":"#112233","cor2":"#445566"}]}]}],"metas":{"ctr":"","cpc":"","cpa":"","roas":""},"teste_ab":[""],"regras":[""],"checklist":[""]}';
+ const pr='Você é um gestor de tráfego pago sênior no Brasil. '+tCtx(c)+' Monte um plano de campanha realista para as plataformas indicadas, dividindo a verba diária (verba mensal ÷ 30) entre elas conforme o objetivo. Para cada plataforma: objetivo de campanha, estrutura (campanhas e conjuntos de anúncios), 2 a 3 públicos, posicionamentos, e 2 criativos em vídeo. Em Google/YouTube inclua 8 palavras-chave e 6 negativas; nas outras deixe essas listas vazias. Cada criativo tem gancho forte nos 2 primeiros segundos, texto principal, título curto, descrição, CTA e de 4 a 5 cenas de vídeo (texto curto e falado de até 120 caracteres, um emoji e duas cores hexadecimais), formato 9:16 para Meta e TikTok e 16:9 ou 9:16 para Google. Use linguagem natural em português do Brasil, sem promessas de resultado garantido nem alegações proibidas pelas políticas das plataformas. Em metas, dê valores-alvo de CTR, CPC, CPA e ROAS plausíveis para o nicho. Em regras, 5 regras objetivas de otimização (quando pausar, escalar e testar). Em teste_ab, 3 testes. Em checklist, os passos para publicar. Responda SOMENTE em JSON neste formato: '+schema;
+ try{const r=await trfAI(pr);if(!r||!Array.isArray(r.plataformas)||!r.plataformas.length)throw new Error('vazio');
+  c.plan=r;c.planAt=Date.now();tS();tPlan();$('#tcst').textContent='Plano pronto! Role para baixo para ver tudo.'}
+ catch(e){$('#tcst').textContent=e&&e.message==='noai'?('O modo IA não está disponível. '+(window.aiWhy||'')):e&&e.code==='not_granted'?'Permissão negada para o modo IA.':'Não consegui gerar agora. Tente de novo.'}
+ trfBusy=false;$('#tcgen').disabled=false};
+
+const tList=a=>(Array.isArray(a)?a:[]).filter(Boolean);
+function tCopy(t,btn){const ok=()=>{if(btn){const o=btn.textContent;btn.textContent='Copiado ✓';setTimeout(()=>btn.textContent=o,1500)}};
+ try{navigator.clipboard.writeText(t).then(ok,()=>tFall(t,ok))}catch(e){tFall(t,ok)}}
+function tFall(t,ok){const a=tE('textarea',{value:t});a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){}a.remove()}
+function tTxtCr(cr,pl){return [pl+' · '+cr.nome,'Gancho: '+cr.gancho,'Texto principal: '+cr.texto_principal,'Título: '+cr.titulo,'Descrição: '+cr.descricao,'CTA: '+cr.cta,'Roteiro:'].concat(tList(cr.cenas).map((x,i)=>(i+1)+'. '+x.texto)).join('\n')}
+function tTxtPl(p){return ['== '+p.nome+' ==','Objetivo: '+p.objetivo,'Estrutura: '+p.estrutura,'Verba diária: '+brl(p.orcamento_diario),'Públicos: '+tList(p.publicos).join(' | '),'Posicionamentos: '+(p.posicionamentos||'')].concat(tList(p.palavras_chave).length?['Palavras-chave: '+p.palavras_chave.join(', '),'Negativas: '+tList(p.negativas).join(', ')]:[]).concat(tList(p.criativos).map(x=>'\n'+tTxtCr(x,p.nome))).join('\n')}
+
+function tPlan(){
+ const box=$('#tcplan');box.innerHTML='';const c=tCur(),r=c&&c.plan;if(!r)return;
+ const top=tE('div',{className:'card'});top.append(tE('h2',{textContent:'📋 Plano de '+(c.tcn||'cliente')}),tE('p',{className:'sub',textContent:r.resumo||''}));
+ const tot=tList(r.plataformas).reduce((a,p)=>a+(+p.orcamento_diario||0),0);top.append(tE('div',{className:'mu',textContent:'Verba diária total: '+brl(tot)+' · mensal ≈ '+brl(tot*30)}));
+ const bar=tE('div',{className:'bar'});
+ const b1=tE('button',{textContent:'🎬 Criar TODOS os vídeos'});b1.onclick=()=>tAll();
+ const b2=tE('button',{className:'s',textContent:'📋 Copiar pacote'});b2.onclick=()=>tCopy(['PLANO — '+c.tcn,r.resumo].concat(tList(r.plataformas).map(tTxtPl)).concat(['','Metas: CTR '+((r.metas||{}).ctr||'-')+' · CPC '+((r.metas||{}).cpc||'-')+' · CPA '+((r.metas||{}).cpa||'-')+' · ROAS '+((r.metas||{}).roas||'-'),'Regras:'].concat(tList(r.regras).map(x=>'- '+x)),['Checklist:'].concat(tList(r.checklist).map(x=>'- '+x))).join('\n'),b2);
+ const b3=tE('button',{className:'s',textContent:'⬇ Baixar (.json)'});b3.onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(r,null,2)],{type:'application/json'}));const a=tE('a',{href:u,download:'plano-'+(c.tcn||'cliente').replace(/\W+/g,'-')+'.json'});a.click()};
+ bar.append(b1,b2,b3);top.append(bar,tE('div',{id:'tqst',className:'mu'}));box.append(top);
+ tList(r.plataformas).forEach((p,pi)=>{
+  const d=tE('div',{className:'card pl2'});d.append(tE('h3',{textContent:p.nome+' · '+brl(p.orcamento_diario)+'/dia'}),tE('div',{className:'mu',textContent:'Objetivo: '+(p.objetivo||'-')}),tE('div',{textContent:p.estrutura||''}));
+  if(tList(p.publicos).length)d.append(tE('b',{textContent:'Públicos'}),tE('ul',{},tList(p.publicos).map(x=>tE('li',{textContent:x}))));
+  if(p.posicionamentos)d.append(tE('div',{className:'mu',textContent:'Posicionamentos: '+p.posicionamentos}));
+  if(tList(p.palavras_chave).length)d.append(tE('b',{textContent:'Palavras-chave'}),tE('div',{textContent:p.palavras_chave.join(' · ')}),tE('div',{className:'mu',textContent:'Negativar: '+tList(p.negativas).join(', ')}));
+  tList(p.criativos).forEach((cr,ci)=>{
+   const k=pi+'-'+ci,x=tE('div',{className:'cr'});
+   x.append(tE('b',{textContent:'🎬 '+(cr.nome||'Criativo '+(ci+1))}),tE('div',{textContent:'Gancho: '+(cr.gancho||'')}),tE('div',{className:'mu',textContent:'Texto: '+(cr.texto_principal||'')}),tE('div',{className:'mu',textContent:'Título: '+(cr.titulo||'')+' · CTA: '+(cr.cta||'')}));
+   const bb=tE('div',{className:'bar'}),o=tE('button',{className:'s',textContent:'Abrir no estúdio'});o.onclick=()=>tOpen(cr,p.nome);
+   const g=tE('button',{className:'s',textContent:'⏺ Gerar vídeo'});g.onclick=()=>tOne(pi,ci,g);
+   const cp=tE('button',{className:'s',textContent:'Copiar textos'});cp.onclick=()=>tCopy(tTxtCr(cr,p.nome),cp);
+   bb.append(o,g,cp);x.append(bb);const slot=tE('div',{id:'tv'+k});x.append(slot);if(TV[(c.id)+'|'+k])tShowVid(slot,TV[c.id+'|'+k]);d.append(x)});
+  box.append(d)});
+ const f=tE('div',{className:'card'});
+ f.append(tE('h2',{textContent:'🎯 Metas, regras e testes'}),tE('div',{textContent:'CTR '+((r.metas||{}).ctr||'-')+' · CPC '+((r.metas||{}).cpc||'-')+' · CPA '+((r.metas||{}).cpa||'-')+' · ROAS '+((r.metas||{}).roas||'-')}),tE('b',{textContent:'Regras de otimização'}),tE('ul',{},tList(r.regras).map(x=>tE('li',{textContent:x}))),tE('b',{textContent:'Testes A/B'}),tE('ul',{},tList(r.teste_ab).map(x=>tE('li',{textContent:x}))),tE('b',{textContent:'Checklist para publicar'}),tE('ul',{},tList(r.checklist).map(x=>tE('li',{textContent:x}))));
+ box.append(f)}
+
+function tLoad(cr,plat){
+ const c=tCur();if(playing)stopPlay();
+ const cs=tList(cr.cenas).slice(0,8);if(!cs.length)throw new Error('sem cenas');
+ scenes=cs.map(x=>mkGen(x));
+ const f=SZ[cr.formato]?cr.formato:'9:16';$('#fmt').value=f;setFmt();
+ $('#mode').value='ad';$('#prod').value=String(c.tcof||c.tcn||'').slice(0,60);$('#cta').value=String(cr.cta||'').slice(0,40);$('#mode').dispatchEvent(new Event('input'));
+ if(c.av!==false){if($('#avatar').value==='none')setAvatar('pessoa');$('#avmode').value='all'}else setAvatar('none');
+ renderList();cur=0;draw(0)
+}
+function tOpen(cr,plat){try{tLoad(cr,plat);go('anuncios');$('#st').textContent='Criativo carregado. Veja a prévia e toque em Gerar vídeo.'}catch(e){$('#tqst').textContent='Esse criativo não tem cenas.'}}
+function tShowVid(slot,v){slot.innerHTML='';const vid=tE('video',{src:v.u,controls:true,playsInline:true});vid.style.cssText='width:100%;max-height:50vh;border-radius:10px;margin-top:6px';
+ const a=tE('a',{href:v.u,download:'anuncio.'+v.ext,textContent:'⬇ Baixar vídeo (.'+v.ext+')'});a.style.cssText='display:block;margin-top:6px;font-size:14px;color:var(--tx)';slot.append(vid,a)}
+async function tRecord(cr,plat){
+ tLoad(cr,plat);go('anuncios');const prev=window.lastRec;
+ await new Promise(r=>setTimeout(r,500));$('#br').click();
+ const t0=Date.now();
+ while(Date.now()-t0<180000){await new Promise(r=>setTimeout(r,500));if(window.lastRec&&window.lastRec!==prev)return window.lastRec;if(!recording&&!playing&&$('#br').disabled===false&&Date.now()-t0>4000)break}
+ return window.lastRec&&window.lastRec!==prev?window.lastRec:null
+}
+async function tOne(pi,ci,btn){
+ const c=tCur(),p=c.plan.plataformas[pi],cr=p.criativos[ci];btn.disabled=true;
+ const v=await tRecord(cr,p.nome);btn.disabled=false;
+ go('trafego');await new Promise(r=>setTimeout(r,100));
+ if(v){TV[c.id+'|'+pi+'-'+ci]=v;const s=$('#tv'+pi+'-'+ci);if(s)tShowVid(s,v)}else{const q=$('#tqst');if(q)q.textContent='Não consegui gravar esse vídeo. Use Abrir no estúdio.'}
+}
+async function tAll(){
+ const c=tCur();if(!c||!c.plan||trfBusy)return;trfBusy=true;
+ const jobs=[];c.plan.plataformas.forEach((p,pi)=>tList(p.criativos).forEach((cr,ci)=>jobs.push([pi,ci,p,cr])));
+ let ok=0;
+ for(let i=0;i<jobs.length;i++){const [pi,ci,p,cr]=jobs[i];
+  const q=$('#tqst');if(q)q.textContent='Gerando vídeo '+(i+1)+' de '+jobs.length+' ('+p.nome+')… não feche esta tela.';
+  try{const v=await tRecord(cr,p.nome);if(v){TV[c.id+'|'+pi+'-'+ci]=v;ok++}}catch(e){}
+  go('trafego');await new Promise(r=>setTimeout(r,150));const s=$('#tv'+pi+'-'+ci);if(s&&TV[c.id+'|'+pi+'-'+ci])tShowVid(s,TV[c.id+'|'+pi+'-'+ci])}
+ trfBusy=false;const q=$('#tqst');if(q)q.textContent=ok+' de '+jobs.length+' vídeos prontos. Baixe cada um abaixo do criativo.'
+}
+
+/* ---- Otimização ---- */
+function tParse(txt){return txt.split(/\n+/).map(l=>l.trim()).filter(l=>l&&!/^nome\s*;/i.test(l)).map(l=>{const a=l.split(';').map(x=>x.trim()),n=x=>{const v=parseFloat(String(x||'0').replace(/[R$\s]/g,'').replace(/\.(?=\d{3}\b)/g,'').replace(',','.'));return isFinite(v)?v:0};
+ return{nome:a[0]||'Anúncio',gasto:n(a[1]),imp:n(a[2]),cli:n(a[3]),conv:n(a[4]),rec:n(a[5])}}).filter(x=>x.gasto>0||x.imp>0)}
+function tNum(s){const m=String(s||'').replace(',','.').match(/\d+(\.\d+)?/);return m?parseFloat(m[0]):0}
+function tDecide(r,m,c){
+ const ctr=r.imp?r.cli/r.imp*100:0,cpc=r.cli?r.gasto/r.cli:0,cpa=r.conv?r.gasto/r.conv:0,roas=r.gasto?r.rec/r.gasto:0;
+ let tcpa=tNum((m||{}).cpa),troas=tNum((m||{}).roas);if(!tcpa&&c.tcpr)tcpa=+c.tcpr*.35;
+ let d='m',why='Poucos dados: deixe rodar até ~1.000 impressões e algum gasto.';
+ const lim=tcpa||(c.tcpr?+c.tcpr*.5:0);
+ if(r.imp>=1000||r.gasto>=20){
+  if(r.conv===0&&lim&&r.gasto>=lim*1.5){d='p';why='Gastou '+brl(r.gasto)+' sem conversão (meta de CPA '+brl(lim)+'). Pausar e trocar o criativo.'}
+  else if(r.conv===0&&ctr<.8&&r.imp>=3000){d='p';why='CTR de '+ctr.toFixed(2)+'% e nenhuma conversão. O gancho não prende: pausar.'}
+  else if(r.conv>0&&tcpa&&cpa<=tcpa*.8||(troas&&roas>=troas*1.2&&r.conv>0)){d='e';why='CPA '+brl(cpa)+(roas?' · ROAS '+roas.toFixed(1)+'x':'')+' acima da meta. Subir a verba em 20% a cada 2 dias.'}
+  else if(r.conv>0&&tcpa&&cpa>tcpa*1.3){d='t';why='CPA '+brl(cpa)+' acima da meta '+brl(tcpa)+'. Testar novo gancho e público antes de pausar.'}
+  else if(ctr<.8&&r.imp>=3000){d='t';why='CTR baixo ('+ctr.toFixed(2)+'%). Testar um gancho novo nos 2 primeiros segundos.'}
+  else if(r.conv>0){d='m';why='Dentro da meta. Manter e acompanhar por mais 2 a 3 dias.'}
+  else{d='t';why='Ainda sem conversão. Revisar oferta, página e público.'}
+ }
+ return{ctr,cpc,cpa,roas,d,why}
+}
+const DL={p:['⏸ Pausar','d-p'],e:['🚀 Escalar','d-e'],t:['🧪 Testar','d-t'],m:['⏳ Manter','d-m']};
+$('#topt').onclick=()=>{
+ tRead();const c=tCur(),rows=tParse($('#tmet').value),out=$('#tout');out.innerHTML='';
+ if(!rows.length){out.textContent='Cole os resultados no formato: nome;gasto;impressoes;cliques;conversoes;receita';return}
+ const m=(c.plan||{}).metas||{},tb=tE('table');tb.innerHTML='<tr><th>Anúncio</th><th>Gasto</th><th>CTR</th><th>CPA</th><th>ROAS</th><th>Decisão</th></tr>';
+ const res=rows.map(r=>({r,x:tDecide(r,m,c)}));
+ res.forEach(({r,x})=>{const tr=tE('tr');tr.append(tE('td',{textContent:r.nome}),tE('td',{textContent:brl(r.gasto)}),tE('td',{textContent:x.ctr.toFixed(2)+'%'}),tE('td',{textContent:r.conv?brl(x.cpa):'—'}),tE('td',{textContent:r.rec?x.roas.toFixed(1)+'x':'—'}),tE('td',{},tE('span',{className:'dec '+DL[x.d][1],textContent:DL[x.d][0]})));tb.append(tr)});
+ const wh=tE('ul',{},res.map(({r,x})=>tE('li',{textContent:r.nome+': '+x.why})));
+ const tg=rows.reduce((a,r)=>({g:a.g+r.gasto,c:a.c+r.conv,v:a.v+r.rec}),{g:0,c:0,v:0});
+ out.append(tb,tE('p',{className:'mu',textContent:'Total: gasto '+brl(tg.g)+' · '+tg.c+' conversões'+(tg.c?' · CPA médio '+brl(tg.g/tg.c):'')+(tg.v?' · ROAS '+(tg.v/tg.g).toFixed(1)+'x':'')}),wh);
+ window._tres={res,tg}};
+$('#trel').onclick=async()=>{
+ tRead();const c=tCur(),rows=tParse($('#tmet').value),out=$('#tout');
+ if(!rows.length){out.textContent='Cole os resultados primeiro e toque em Analisar.';return}
+ $('#topt').click();const b=$('#trel');b.disabled=true;const note=tE('p',{className:'mu',textContent:'A IA está escrevendo o relatório…'});out.append(note);
+ try{const r=await trfAI('Você é gestor de tráfego e escreve para o dono de um negócio, sem jargão. '+tCtx(c)+' Resultados do período (nome;gasto;impressões;cliques;conversões;receita): '+rows.map(x=>[x.nome,x.gasto,x.imp,x.cli,x.conv,x.rec].join(';')).join(' | ')+'. Escreva um relatório curto em português do Brasil com: resumo do período, o que funcionou, o que não funcionou, e os próximos passos da semana. Seja honesto e não prometa resultado. Responda SOMENTE em JSON: {"relatorio":""}');
+  note.remove();const t=String((r||{}).relatorio||'');if(!t)throw new Error('vazio');
+  const bx=tE('div',{className:'pl2'});bx.append(tE('b',{textContent:'📝 Relatório para '+(c.tcn||'o cliente')}),tE('div',{textContent:t,style:'white-space:pre-wrap;font-size:14px'}));
+  const cp=tE('button',{className:'s',textContent:'Copiar relatório'});cp.onclick=()=>tCopy(t,cp);bx.append(cp);out.append(bx)}
+ catch(e){note.textContent='Não consegui escrever o relatório agora. Tente de novo.'}
+ b.disabled=false};
+
+/* ===== Tutorial completo + Modo explicar ===== */
+const HELP={
+hb:'Tutorial|Abre o tour guiado passo a passo.',mhelp:'Tutorial|Abre o tour guiado passo a passo.',mback:'‹ Central|Volta à lista de módulos.',
+sl:'Barra de tempo|Arraste para ver qualquer momento do vídeo.',bp:'▶ Prévia|Toca o vídeo na tela para você conferir. Toque de novo para parar.',br:'⏺ Gerar vídeo|Grava o vídeo em tempo real. Deixe a tela aberta até o fim e depois toque em Salvar vídeo.',
+req:'O que você quer criar|Descreva o vídeo com suas palavras. Quanto mais detalhe, melhor.',neg:'O que evitar|Temas, cores ou estilos que a IA não deve usar.',sty:'Estilo visual|Visual das ilustrações criadas pela IA.',sf:'Imagem inicial|Foto opcional que vira a primeira cena.',
+pdur:'Duração|20, 30 ou 40 s: define o número de cenas.',par:'Formato|9:16 Reels/TikTok/Stories, 16:9 YouTube, 1:1 feed.',kind:'Tipo de vídeo|Anúncio, historinha, aula, evento, depoimento, frases ou gameplay.',tone:'Tom|Jeito da fala: alegre, profissional, divertido ou emocionante.',nsc:'Cenas|Quantidade de cenas que a IA cria.',avatar:'Boneco de IA|Apresentador que fala os textos das cenas.',ia:'✨ Criar vídeo com IA|A IA escreve o roteiro e monta as cenas. Se houver fotos nas Cenas, ela escreve o texto de cada uma.',
+mode:'Tipo|Anúncio mostra preço e chamada final. Clipe é um slideshow.',fmt:'Formato|Proporção do vídeo: 9:16, 1:1 ou 16:9.',tpl:'Modelo do anúncio|Clássico, Oferta, Minimalista ou Luxo.',logo:'Logo|Envia o logo que aparece nos vídeos. Fica salvo no aparelho.',prod:'Produto / marca|Nome mostrado no anúncio e na chamada final.',price:'Preço|Aparece em uma etiqueta no anúncio.',cta:'Chamada final|Texto do botão da última tela, ex.: Compre agora.',col:'Cor da marca|Cor do preço, botão e tela final.',
+pav:'Personagens|Escolhe o boneco: pessoa, mulher, criança, vovô, astronauta, robô, alien, gatinho, cachorro, panda ou nenhum.',pcol:'Cor da roupa|Cor da roupa e dos destaques do boneco.',skin:'Cor da pele|Tom de pele do boneco humano.',hair:'Cor do cabelo|Cor do cabelo do boneco humano.',pgrid:'Posição do boneco|Escolhe um dos 9 pontos da tela onde ele fica.',avsz:'Tamanho|Tamanho do boneco, de 40% a 140%.',avop:'Opacidade|Deixa o boneco mais transparente.',avmode:'Quando aparece|Em todas as cenas, só nas marcadas ou só quando há texto.',avgest:'Movimento e gestos|De parado a bem animado.',avwave:'Acenar ao entrar|O boneco acena quando aparece.',avtest:'▶ Ver o boneco em ação|Prévia curta do boneco falando e se mexendo.',
+anar:'Boneco narra sozinho|Lê os textos das cenas em voz alta (voz do aparelho).',fitdur:'Ajustar duração à fala|Alonga a cena até a fala caber inteira.',vstyle:'Estilo de voz|Feminina, masculina, infantil, grave, robô e outras.',vsel:'Voz|Escolhe uma voz do aparelho. ★ são as mais naturais.',vrate:'Velocidade|Velocidade da fala: devagar, normal ou rápida.',
+vprov:'Serviço de voz|Voz do aparelho (grátis) ou realista via OpenAI ou ElevenLabs.',vkey:'Chave de acesso|Sua API key do serviço. Fica salva só neste aparelho.',vcv:'Voz do serviço|Voz usada no serviço realista.',vload:'Carregar minhas vozes|Busca as vozes da sua conta ElevenLabs.',vctest:'🔊 Testar voz realista|Toca uma amostra com o serviço escolhido.',vkclr:'Apagar chave|Remove a chave salva neste aparelho.',
+say:'Texto para o boneco falar|Escreva aqui o que ele deve dizer.',vtest:'🔊 Testar voz|Toca uma frase de exemplo.',saybtn:'🗣 Falar|O boneco fala o texto escrito acima.',sayadd:'＋ Cena com este texto|Cria uma cena nova com esse texto.',
+tlang:'Traduzir para|Idioma de destino dos textos.',tbtn:'Traduzir textos|A IA traduz todos os textos das cenas e muda o idioma da narração.',trlang:'Idioma da fala|Idioma que você vai falar na transcrição.',trdest:'Onde usar o texto|Pedido da IA, uma cena ou várias cenas.',trsc:'Cena de destino|Cena que receberá o texto.',trbtn:'🎤 Transcrever|Liga o microfone e escreve o que você fala.',trtxt:'Texto transcrito|Corrija à vontade antes de usar.',truse:'Usar este texto|Envia o texto para o destino escolhido.',trclr:'Limpar|Apaga o texto transcrito.',clr:'Apagar dados|Remove marca, pedidos e projetos salvos neste aparelho.',
+tl:'Linha do tempo|Cada quadrado é uma cena. Toque para selecionar. O + adiciona fotos ou vídeos.',tb:'Ferramentas|Texto, Recorte (duração e início), Áudio, Voz, Legendas, Logo, Boneco e Ordem da cena selecionada.',list:'Lista de cenas|Edite texto e duração. ↑ ↓ mudam a ordem. Remover apaga a cena.',addb:'+ Fotos / vídeos|Escolhe arquivos da galeria. Cada um vira uma cena.',musb:'♪ Música|Escolhe um áudio do aparelho para tocar no vídeo.',auto:'✨ Fazer tudo sozinho|A IA escreve títulos, escolhe modelo e chamada final. Vídeo longo é cortado em cenas.',cap:'Estilo legenda|Texto menor com contorno, como legenda.',nar:'Narrar em voz alta|Lê os textos na prévia.',mic:'Gravar minha voz|Grava seu microfone junto ao vídeo gerado.',vsnd:'Manter o som dos vídeos|Leva o áudio original (gameplay, gravação de tela).',fit:'Ajuste do vídeo|Preencher a tela (corta) ou caber inteiro com fundo desfocado.',
+tcreq:'Pedido do cliente|Cole a mensagem do cliente em texto livre.',tcgo:'Ativar ao criar|Desmarcado, os anúncios nascem pausados para revisão. Marcado, começam a gastar verba.',tcauto:'🚀 Criar e publicar tudo|Lê o pedido, preenche a ficha, gera o plano, grava os vídeos e publica.',tcpub2:'📤 Só publicar|Publica o plano e os vídeos já prontos do cliente atual.',mtok:'Token Meta|Token de acesso com permissão ads_management.',mact:'Conta de anúncios|ID da conta, no formato act_123.',mpg:'Página|ID da página que aparece como autora do anúncio.',mhook:'Webhook|Endereço do Make, Zapier ou n8n que recebe plano e vídeos.',msave:'Salvar conexões|Guarda token, conta, página e webhook neste aparelho.',
+tcsel:'Cliente|Troca entre os clientes da agência.',tcnew:'+ Novo cliente|Cria uma ficha em branco.',tcdel:'Excluir|Apaga o cliente e o plano dele.',tcn:'Nome do cliente|Nome do negócio.',tcnicho:'Nicho|Ramo de atuação.',tcof:'Oferta|O que será vendido ou divulgado.',tcpub:'Público e região|Quem e onde anunciar.',tcurl:'Link ou WhatsApp|Destino do clique.',tcbud:'Verba mensal|Dividida por dia entre as plataformas.',tcobj:'Objetivo|Vendas, leads, tráfego ou marca.',tcpl:'Onde anunciar|Meta, TikTok e Google/YouTube.',tcdif:'Diferenciais e restrições|O que destacar e o que evitar.',tcpr:'Ticket médio|Ajuda a calcular metas de custo por venda.',tcav:'Boneco apresentador|Inclui o boneco falando nos vídeos.',tcgen:'✨ Gerar plano completo|A IA monta estrutura, públicos, verba, textos, palavras-chave e roteiros.',tmet:'Resultados|Um anúncio por linha: nome;gasto;impressoes;cliques;conversoes;receita.',topt:'Analisar resultados|Diz o que pausar, escalar ou testar.',trel:'📝 Relatório|A IA escreve um relatório simples para o cliente.',tcplan:'Plano|Em cada criativo: Abrir no estúdio, ⏺ Gerar vídeo e Copiar textos. No topo: Criar TODOS os vídeos, Copiar pacote e Baixar .json.',
+pjn:'Nome do projeto|Nome para salvar.',pjs:'Salvar projeto|Guarda cenas e configurações neste aparelho.',pjl:'Meus projetos|Abrir carrega o projeto, Excluir apaga.',pcat:'Categoria|Tipo do pedido.',pdev:'Aparelho|Seu aparelho.',ptx:'Descrição|Conte a novidade ou o problema.',psend:'Enviar pedido|Envia ou salva no aparelho.',pcopy:'Copiar lista|Copia todos os pedidos.',tustart:'▶ Tour guiado|Percorre todos os módulos.'};
+const hname=k=>HELP[k].split('|')[0],htxt=k=>HELP[k].split('|')[1];
+$('#hall').innerHTML=Object.keys(HELP).filter(k=>k!=='mhelp').map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+const TS2=[
+[()=>$('#hubh'),'Central','Cada cartão é um módulo. Toque para abrir. O botão 🔎 Explicar botões descreve qualquer botão do app.','home'],
+[()=>$('#req'),'Criar com IA · pedido','Descreva o vídeo, o que evitar, o estilo visual e, se quiser, uma imagem inicial.','ia'],
+[()=>$('#pdur'),'Duração, formato, tipo e tom','Os botões 20/30/40 s e 9:16/16:9/1:1 definem tamanho. Tipo e Tom guiam o roteiro; Cenas e Boneco completam.','ia'],
+[()=>$('#ia'),'✨ Criar vídeo com IA','Gera o roteiro e as cenas. Com fotos nas Cenas, escreve o texto de cada uma.','ia'],
+[()=>$('#addb'),'Cenas · fotos, vídeos e música','+ Fotos/vídeos cria cenas. ♪ Música adiciona trilha. Em cada cena: texto, duração, ↑ ↓ e Remover.','ia'],
+[()=>$('#auto'),'✨ Fazer tudo sozinho','Escreve títulos, escolhe modelo e chamada final e corta vídeo longo em cenas.','ia'],
+[()=>$('#cap'),'Opções do vídeo','Legenda, narrar em voz alta, gravar sua voz, manter o som dos vídeos e ajuste de tela (preencher ou fundo desfocado).','ia'],
+[()=>$('#tl'),'Editor · linha do tempo','Cada quadrado é uma cena. O + adiciona mais.','editor'],
+[()=>$('#tb'),'Editor · ferramentas','Texto, Recorte, Áudio, Voz, Legendas, Logo, Boneco e Ordem. Cada uma mostra seus controles acima.','editor'],
+[()=>$('#bp'),'Prévia, barra e gerar','Prévia toca. A barra navega no tempo. Gerar vídeo grava em tempo real e depois aparece Salvar vídeo.','editor'],
+[()=>$('#mode').closest('.card'),'Anúncios','Tipo, formato, modelo, logo, produto, preço, chamada final e cor da marca.','anuncios'],
+[()=>$('#pav'),'Personagens IA','Escolha o boneco e as cores de roupa, pele e cabelo.','personagens'],
+[()=>$('#pgrid'),'Posição e presença','Posição em 9 pontos, tamanho, opacidade, quando aparece, gestos, acenar e Ver o boneco em ação.','personagens'],
+[()=>$('#anar'),'Voz do boneco','Narração automática, ajuste de duração, estilo, voz e velocidade.','personagens'],
+[()=>$('#vprov'),'Voz realista','OpenAI ou ElevenLabs: cole a chave, carregue as vozes, teste e apague a chave quando quiser.','personagens'],
+[()=>$('#say'),'Fazer o boneco falar','Escreva e toque em Falar, Testar voz ou ＋ Cena com este texto.','personagens'],
+[()=>$('#vsnd'),'Games e gameplay','Adicione a gravação de tela, mantenha o som e use fundo desfocado em vídeo deitado.','games'],
+[()=>$('#tbtn'),'Voz e legendas','Traduza os textos e use a transcrição por microfone para ditar roteiros ou cenas.','voz'],
+[()=>$('#tcauto'),'Tráfego · Piloto automático','Cole o pedido do cliente e toque em Criar e publicar tudo. Ele faz ficha, plano, vídeos e publicação.','trafego'],
+[()=>$('#msave'),'Tráfego · Conexões','Token, conta e página da Meta e um webhook opcional. Sem conexão, você recebe o pacote pronto.','trafego'],
+[()=>$('#tcgen'),'Tráfego · ficha e plano','Ficha do cliente, plano completo e, em cada criativo, Abrir no estúdio, Gerar vídeo e Copiar textos.','trafego'],
+[()=>$('#topt'),'Tráfego · otimização','Cole os resultados e veja o que pausar, escalar ou testar. 📝 Relatório escreve para o cliente.','trafego'],
+[()=>$('#pjs'),'Meus projetos','Salve o trabalho e abra depois.','projetos'],
+[()=>$('#psend'),'Solicitar recursos','Envie ideias e problemas.','pedidos'],
+[()=>$('#tustart'),'Tutoriais','Aqui ficam o tour e o Guia de todos os botões.','tutoriais'],
+[()=>$('#clr'),'Configurações','Apaga marca, pedidos e projetos salvos neste aparelho.','config'],
+[()=>$('#hubh'),'Importante','O app não baixa vídeos de links. Salve na galeria antes. Para ver o que um botão faz, ligue o 🔎.','home']];
+TS.length=0;TS.push(...TS2);
+const _sT=showT;showT=function(n){$('#tn').style.display='';_sT(n)};
+const _cT=closeT;closeT=function(){_cT();document.body.classList.remove('hm')};$('#tx').onclick=()=>closeT();
+(function(){const b=document.createElement('button');b.id='hmb';b.className='s';b.textContent='🔎 Explicar botões';document.body.appendChild(b);
+function box(t,d){$('#tt').textContent=t;$('#td').textContent=d;$('#tbk').style.visibility='hidden';$('#tn').style.display='none';$('#tut').style.display='block';document.body.classList.add('tt')}
+b.onclick=()=>{if(document.body.classList.toggle('hm'))box('Modo explicar ligado','Toque em qualquer botão ou campo para ver o que ele faz. Nada é executado.');else closeT()};
+const H=e=>{if(!document.body.classList.contains('hm'))return;let el=e.target;if(el.closest('#tut,#hmb'))return;
+while(el&&el!==document.body&&!(el.id&&HELP[el.id]))el=el.parentElement;e.preventDefault();e.stopPropagation();
+if(el&&el.id)box(hname(el.id),htxt(el.id));else box('Sem descrição','Toque em outro botão ou campo.')};
+['click','mousedown','touchstart'].forEach(v=>document.addEventListener(v,H,true))})();
+
+/* ===== Tráfego: piloto automático e publicação ===== */
+let TCN={};try{TCN=JSON.parse(localStorage.getItem('trfconn')||'{}')}catch(e){}
+['mtok','mact','mpg','mhook'].forEach(k=>$('#'+k).value=TCN[k]||'');
+$('#msave').onclick=()=>{['mtok','mact','mpg','mhook'].forEach(k=>TCN[k]=$('#'+k).value.trim());try{localStorage.setItem('trfconn',JSON.stringify(TCN))}catch(e){}$('#mmsg').textContent='Conexões salvas neste aparelho.'};
+const plog=t=>{$('#tcprog').textContent+=t+'\n'};
+const tLink=u=>{u=(u||'').trim();if(/^https?:/i.test(u))return u;const d=u.replace(/\D/g,'');return d.length>=10?'https://wa.me/'+(d.length<=11?'55':'')+d:'https://'+u};
+async function tFillAI(txt){
+const o=['Vendas','Leads (WhatsApp/formulário)','Tráfego para o site','Reconhecimento de marca'];
+const r=await trfAI('Extraia do pedido do cliente os dados para uma campanha de anúncios. Pedido: '+txt+'\nResponda SOMENTE JSON: {"tcn":"nome do cliente","tcnicho":"","tcof":"oferta","tcpub":"público e região","tcurl":"link ou WhatsApp","tcbud":1500,"tcobj":"um de: '+o.join(' | ')+'","tcdif":"diferenciais e o que evitar","tcpr":0,"pl":["Meta","TikTok","Google"]}. Se algo faltar, deduza do nicho com bom senso; plataformas padrão: Meta e TikTok.');
+tRead();const c0=tCur();if(c0&&(c0.tcn||c0.tcof)){TC.push({id:Date.now()});TCi=TC.length-1}
+const c=tCur();TF.forEach(k=>{if(r[k]!==undefined)c[k]=r[k]});if(!o.includes(c.tcobj))c.tcobj=o[0];c.pl=tList(r.pl).length?r.pl:['Meta','TikTok'];c.av=true;tS();tSel();tFill()}
+async function metaPub(c,p){
+const T=TCN.mtok,A=(TCN.mact||'').startsWith('act_')?TCN.mact:'act_'+TCN.mact,G='https://graph.facebook.com/v21.0/',st=$('#tcgo').checked?'ACTIVE':'PAUSED';
+const post=async(path,o,host)=>{const f=new FormData();for(const k in o){const v=o[k];if(v instanceof Blob)f.append(k,v,'video.'+(v.type.includes('mp4')?'mp4':'webm'));else f.append(k,typeof v==='object'?JSON.stringify(v):v)}f.append('access_token',T);
+const r=await fetch((host||G)+path,{method:'POST',body:f}),j=await r.json();if(j.error)throw new Error(j.error.error_user_msg||j.error.message);return j};
+const aw=c.tcobj==='Reconhecimento de marca',nm=(c.tcn||'Cliente')+' · '+new Date().toLocaleDateString('pt-BR');
+const camp=await post(A+'/campaigns',{name:nm,objective:aw?'OUTCOME_AWARENESS':'OUTCOME_TRAFFIC',status:st,special_ad_categories:[],is_adset_budget_sharing_enabled:false});
+const as=await post(A+'/adsets',{name:nm+' · público',campaign_id:camp.id,daily_budget:Math.max(600,Math.round((+p.orcamento_diario||20)*100)),billing_event:'IMPRESSIONS',optimization_goal:aw?'REACH':'LINK_CLICKS',bid_strategy:'LOWEST_COST_WITHOUT_CAP',targeting:await tgt(T),status:st});
+const img=await post(A+'/adimages',{bytes:cv.toDataURL('image/jpeg',.8).split(',')[1]}),hash=Object.values(img.images)[0].hash;
+let n=0;const pi=c.plan.plataformas.indexOf(p);
+for(let ci=0;ci<tList(p.criativos).length;ci++){const cr=p.criativos[ci],v=TV[c.id+'|'+pi+'-'+ci];if(!v)continue;
+const vd=await post(A+'/advideos',{source:v.blob,name:cr.nome||'Vídeo'},'https://graph-video.facebook.com/v21.0/');
+for(let k=0;k<20;k++){const q=await(await fetch(G+vd.id+'?fields=status&access_token='+T)).json();if(q.status&&q.status.video_status==='ready')break;await new Promise(r=>setTimeout(r,3000))}
+const cre=await post(A+'/adcreatives',{name:cr.nome||'Criativo',object_story_spec:{page_id:TCN.mpg,video_data:{video_id:vd.id,image_hash:hash,title:cr.titulo||'',message:cr.texto_principal||'',link_description:cr.descricao||'',call_to_action:{type:'LEARN_MORE',value:{link:tLink(c.tcurl)}}}}});
+await post(A+'/ads',{name:cr.nome||'Anúncio',adset_id:as.id,creative:{creative_id:cre.id},status:st});n++}
+return n}
+function gCsv(c,p){const q=x=>'"'+String(x).replace(/"/g,'""')+'"',cp=(c.tcn||'Cliente')+' · Pesquisa',R=[['Campaign','Campaign Daily Budget','Ad Group','Keyword','Criterion Type']];
+tList(p.palavras_chave).forEach(k=>R.push([cp,p.orcamento_diario,'Grupo 1',k,'Broad']));tList(p.negativas).forEach(k=>R.push([cp,'','',k,'Negative Broad']));
+const a=tE('a',{href:URL.createObjectURL(new Blob(['\ufeff'+R.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'})),download:'google-ads-editor.csv'});document.body.append(a);a.click();a.remove()}
+async function tPub(){
+const c=tCur();if(!c||!c.plan){plog('Gere o plano primeiro.');return}
+const vids=[];c.plan.plataformas.forEach((p,pi)=>tList(p.criativos).forEach((cr,ci)=>{const v=TV[c.id+'|'+pi+'-'+ci];if(v)vids.push([pi+'-'+ci,v,p.nome])}));
+if(vids.some(x=>x[1].ext!=='mp4'))plog('Aviso: este navegador grava .webm. A Meta aceita melhor .mp4 (Chrome atual e Safari gravam mp4).');
+for(const p of c.plan.plataformas){const nm=(p.nome||'').toLowerCase();
+if(nm.includes('meta')){if(TCN.mtok&&TCN.mact&&TCN.mpg){plog('Meta: publicando…');try{const n=await metaPub(c,p);plog('Meta: ✓ '+n+' anúncio(s) criado(s) '+($('#tcgo').checked?'e ativos.':'pausados. Revise no Gerenciador e ative.'))}catch(e){plog('Meta: ✗ '+e.message)}}else plog('Meta: sem conexão. Preencha token, conta e página em Conexões.')}
+else if(nm.includes('google')){gCsv(c,p);plog('Google: baixei o CSV de palavras para o Google Ads Editor (a API do Google não aceita publicação direta pelo navegador).')}
+else plog(p.nome+': publicação direta indisponível pelo navegador. Baixe os vídeos e copie os textos em cada criativo, ou use o webhook.')}
+if(TCN.mhook){plog('Webhook: enviando…');const f=new FormData();f.append('cliente',JSON.stringify({nome:c.tcn,url:c.tcurl,verba:c.tcbud}));f.append('plano',JSON.stringify(c.plan));f.append('ativar',$('#tcgo').checked);vids.forEach(x=>f.append('video_'+x[0],x[1].blob,'video-'+x[0]+'.'+x[1].ext));
+try{const r=await fetch(TCN.mhook,{method:'POST',body:f});plog(r.ok?'Webhook: ✓ enviado.':'Webhook: ✗ resposta '+r.status)}catch(e){try{await fetch(TCN.mhook,{method:'POST',body:f,mode:'no-cors'});plog('Webhook: enviado (sem confirmação de leitura).')}catch(x){plog('Webhook: ✗ não consegui enviar.')}}}
+}
+$('#tcpub2').onclick=async()=>{$('#tcprog').textContent='';tRead();await tPub()};
+$('#tcauto').onclick=async()=>{
+const tx=$('#tcreq').value.trim();if(tx.length<15){$('#tcprog').textContent='Cole o pedido do cliente com mais detalhes.';return}
+if(trfBusy)return;$('#tcprog').textContent='';$('#tcauto').disabled=true;
+try{plog('1/4 Lendo o pedido…');await tFillAI(tx);
+plog('2/4 Montando o plano…');await $('#tcgen').onclick();if(!(tCur().plan))throw new Error('Não consegui gerar o plano.');
+plog('3/4 Gravando os vídeos (não feche a tela)…');await tAll();
+plog('4/4 Publicando…');await tPub();plog('Concluído.')}
+catch(e){plog('✗ '+(e&&e.message==='noai'?('O modo IA não está disponível. '+(window.aiWhy||'')):(e&&e.message)||'Falhou. Tente de novo.'))}
+$('#tcauto').disabled=false};
+
+/* ===== Portal do cliente ===== */
+MODS.cliente=['🤝','Portal do cliente','O cliente preenche e a IA faz perfil, vídeos e publicação.'];
+(function(){const _g=go;go=function(v,f){$('#cli').style.display=v==='cliente'?'':'none';_g(v,f)}})();
+(function(){const b=document.createElement('button');b.className='mi';b.innerHTML='<i>🤝</i><div><b>Portal do cliente</b><span>O cliente preenche e a IA faz tudo.</span></div><em>›</em>';b.onclick=()=>go('cliente');$('#mlist').prepend(b)})();
+new MutationObserver(()=>{$('#cprog').textContent=$('#tcprog').textContent}).observe($('#tcprog'),{childList:true,characterData:true,subtree:true});
+$('#clogo').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),h=Math.min(256,im.naturalHeight);c.height=h;c.width=im.naturalWidth/im.naturalHeight*h;c.getContext('2d').drawImage(im,0,0,c.width,c.height);setLogo(c.toDataURL('image/png'));saveBrand()};im.src=r.result};r.readAsDataURL(f)};
+Object.assign(HELP,{cnm:'Nome do negócio|Nome da marca do cliente.',cnich:'Ramo|Área de atuação.',cof:'O que divulgar|Oferta ou serviço principal.',cpub:'Cidade e público|Onde e para quem anunciar.',curl2:'WhatsApp ou link|Para onde o cliente vai ao clicar.',cbud:'Verba por mês|Quanto o cliente investe em anúncios.',cobj:'Objetivo|O que o cliente quer: vendas, contatos, visitas ao site ou marca.',cdif:'Diferenciais e evitar|Pontos fortes e o que não pode ser dito.',ccol:'Cor da marca|Usada nos vídeos e no perfil.',clogo:'Logo|Aparece nos vídeos.',cgo:'Ativar ao publicar|Desmarcado, os anúncios ficam pausados para revisão.',cgobtn:'🚀 Enviar e criar tudo|Monta o perfil, o plano e os vídeos e publica.'});
+$('#hall').innerHTML+=['cnm','cnich','cof','cpub','curl2','cbud','cobj','cdif','ccol','clogo','cgo','cgobtn'].map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+TS.splice(18,0,[()=>$('#cgobtn'),'Portal do cliente','O cliente preenche os dados e toca em Enviar e criar tudo. A IA faz o perfil da marca, o plano, os vídeos e publica.','cliente']);
+$('#cgobtn').onclick=async()=>{
+const g=id=>$('#'+id).value.trim();if(!g('cnm')||!g('cof')){$('#cprog').textContent='Preencha o nome e o que quer divulgar.';return}
+if(trfBusy)return;$('#cgobtn').disabled=true;$('#tcprog').textContent='';$('#cperf').innerHTML='';
+try{tRead();const c0=tCur();if(c0&&(c0.tcn||c0.tcof)){TC.push({id:Date.now()});TCi=TC.length-1}
+Object.assign(tCur(),{tcn:g('cnm'),tcnicho:g('cnich'),tcof:g('cof'),tcpub:g('cpub'),tcurl:g('curl2'),tcbud:g('cbud')||1500,tcobj:$('#cobj').value,tcdif:g('cdif'),pl:['Meta','TikTok'],av:true});tS();tSel();tFill();
+$('#tcgo').checked=$('#cgo').checked;$('#col').value=$('#ccol').value;$('#col').dispatchEvent(new Event('input'));saveBrand();
+plog('1/5 Montando o perfil da marca…');const c=tCur();
+const r=await trfAI('Crie o perfil de redes sociais para este negócio. '+tCtx(c)+' Responda SOMENTE JSON: {"nome_perfil":"","slogan":"","bio":"até 150 caracteres","tom_de_voz":"","hashtags":["","","","",""],"destaques":["","",""],"primeiro_post":"legenda pronta"}. Sem promessas de resultado garantido.');
+const bx=tE('div',{className:'card'});bx.append(tE('h2',{textContent:'👤 Perfil da marca'}),tE('div',{},[tE('b',{textContent:r.nome_perfil||c.tcn}),tE('div',{className:'mu',textContent:r.slogan||''}),tE('div',{textContent:r.bio||''}),tE('div',{className:'mu',textContent:'Tom: '+(r.tom_de_voz||'')+' · '+tList(r.hashtags).join(' ')}),tE('div',{className:'mu',textContent:'Destaques: '+tList(r.destaques).join(' · ')}),tE('div',{textContent:r.primeiro_post||''})]));
+const cp=tE('button',{className:'s',textContent:'Copiar perfil'});cp.onclick=()=>tCopy([r.nome_perfil,r.slogan,r.bio,tList(r.hashtags).join(' '),'Destaques: '+tList(r.destaques).join(', '),'',r.primeiro_post].join('\n'),cp);bx.append(cp);$('#cperf').append(bx);
+plog('2/5 Montando o plano…');await $('#tcgen').onclick();if(!tCur().plan)throw new Error('Não consegui gerar o plano.');
+plog('3/5 Gravando os vídeos (não feche a tela)…');await tAll();
+plog('4/5 Publicando…');await tPub();plog('5/5 Concluído. Perfil pronto para copiar abaixo.')}
+catch(e){plog('✗ '+(e&&e.message==='noai'?('O modo IA não está disponível. '+(window.aiWhy||'')):(e&&e.message)||'Falhou. Tente de novo.'))}
+go('cliente');$('#cgobtn').disabled=false};
+
+/* ===== Pedidos de clientes (servidor compartilhado) ===== */
+const CF=['cnm','cnich','cof','cpub','curl2','cbud','cobj','cdif','ccol'],cDone=()=>{try{return JSON.parse(localStorage.getItem('cdone')||'[]')}catch(e){return[]}};
+$('#clink').value=location.href.split('#')[0]+'#enviar';
+(function(){const _g=go;go=function(v,f){if(v==='enviar'){v='cliente';document.body.classList.add('cm')}_g(v,f);if(v==='cliente'&&!document.body.classList.contains('cm'))loadRecv()}})();
+$('#csend').onclick=async()=>{const m=$('#cprog'),g=id=>$('#'+id).value.trim();
+if(!g('cnm')||!g('cof')){m.textContent='Preencha o nome e o que quer divulgar.';return}
+const it={status:'Novo',ts:Date.now()};CF.forEach(k=>it[k]=$('#'+k).value);m.textContent='Enviando…';
+const db=await getDb();if(!db){m.textContent='Não consegui enviar. Abra o link pelo navegador, entre na sua conta Claude e confirme que o link dá acesso de Colaborador. Se continuar, peça um novo link ao estúdio.';return}
+try{await db.collection('clientes').add(it);m.textContent='Enviado! O estúdio vai montar seu perfil e seus vídeos. Obrigado.'}catch(e){m.textContent='Não consegui enviar agora. Tente de novo.'}};
+$('#ccopy').onclick=()=>tCopy($('#clink').value,$('#ccopy'));
+async function loadRecv(){const L=$('#crecv');L.textContent='Carregando…';const db=await getDb();
+if(!db){L.textContent='Servidor compartilhado indisponível neste aparelho.';return}
+let it=[];try{const sn=await db.collection('clientes').orderBy('ts','desc').limit(50).get();it=sn.docs.map(d=>d.data())}catch(e){L.textContent='Não consegui carregar os pedidos.';return}
+L.textContent='';if(!it.length){L.textContent='Nenhum pedido recebido ainda.';return}
+const dn=cDone();it.forEach(x=>{const d=tE('div',{className:'pd'}),ok=dn.includes(x.ts);
+d.append(tE('b',{textContent:x.cnm||'Sem nome'}),tE('div',{textContent:x.cof||''}),tE('small',{textContent:new Date(x.ts).toLocaleString('pt-BR')+(ok?' · já criado':'')}));
+const b=tE('button',{textContent:ok?'Criar de novo':'🚀 Criar tudo'});b.style.marginTop='8px';
+b.onclick=()=>{CF.forEach(k=>{if(x[k]!==undefined)$('#'+k).value=x[k]});const a=cDone();a.push(x.ts);try{localStorage.setItem('cdone',JSON.stringify(a))}catch(e){}$('#cgobtn').click()};d.append(b);L.append(d)})}
+$('#crefresh').onclick=loadRecv;
+Object.assign(HELP,{csend:'📨 Enviar meus dados|Envia o formulário ao estúdio, que cria perfil, vídeos e anúncios.',clink:'Link do cliente|Endereço do formulário para o cliente preencher de longe.',ccopy:'Copiar link|Copia o link para mandar ao cliente.',crefresh:'Atualizar pedidos|Busca os formulários enviados pelos clientes.',crecv:'Pedidos recebidos|Cada pedido tem o botão Criar tudo, que preenche o portal e inicia o piloto automático.'});
+$('#hall').innerHTML+=['csend','clink','ccopy','crefresh','crecv'].map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+
+/* ===== Tutorial para criança: um texto para cada botão ===== */
+Object.assign(HELP,{
+hb:'? Tutorial|Fica no alto do cartão do vídeo, à direita. Toque e eu te levo passeando pelo app, uma coisinha de cada vez.',
+mhelp:'? Tutorial|Fica na barra do topo, à direita. Toque e eu te levo passeando pelo app.',
+mback:'‹ Central|Fica na barra do topo, à esquerda. Toque para voltar para a tela inicial, onde ficam todas as portas do app.',
+sl:'Barra do tempo|É a linha deitada embaixo da tela preta do vídeo. Ponha o dedo na bolinha e arraste para a frente ou para trás, como numa corda.',
+bp:'▶ Prévia|Fica embaixo da tela preta, o botão da esquerda. Toque e o vídeo toca só para você olhar. Toque de novo (■ Parar) para parar.',
+br:'⏺ Gerar vídeo|Fica embaixo da tela preta, o botão da direita. Toque para o app fazer o vídeo de verdade. Espere até o fim, sem sair da tela. Depois toque em Salvar vídeo.',
+req:'O que você quer criar|É a caixa grande de escrever. Conte com suas palavras o vídeo que você quer, como se contasse a um amigo.',
+neg:'O que evitar|Caixa de escrever logo abaixo. Escreva o que NÃO pode aparecer, por exemplo: sem cores escuras.',
+sty:'Estilo visual|Lista que abre ao tocar. Escolha o jeito dos desenhos: colorido, minimalista, aquarela e outros.',
+sf:'Imagem inicial|Toque e escolha uma foto do celular. Ela vira a primeira cena. Pode deixar vazio.',
+pdur:'Duração|Três botõezinhos: 20 s, 30 s e 40 s. Toque no que mostra quanto tempo o vídeo vai durar. O escuro é o escolhido.',
+par:'Formato|Três botõezinhos: 16:9 (deitado, para YouTube), 9:16 (em pé, para Reels e TikTok) e 1:1 (quadrado, para o feed).',
+kind:'Tipo de vídeo|Lista que abre ao tocar. Escolha o que você quer: anúncio, historinha, aula, evento, depoimento, frases ou jogo.',
+tone:'Tom|Lista que abre ao tocar. É o jeitinho de falar: alegre, sério, divertido ou emocionante.',
+nsc:'Cenas|Lista de números. Cena é um pedacinho do vídeo. Escolha quantos pedacinhos quer.',
+avatar:'Boneco de IA|Lista que abre ao tocar. Escolha o bonequinho que vai falar no vídeo, ou Sem boneco.',
+ia:'✨ Criar vídeo com IA|Botão grande preto no fim do cartão Criar com IA. Toque e a inteligência artificial escreve a história e monta as cenas. Pode levar 1 minuto.',
+mode:'Tipo|Primeira lista do cartão 1. Anúncio mostra preço e botão final. Clipe é um álbum de fotos que se mexe.',
+fmt:'Formato|Lista ao lado do Tipo. Escolhe se o vídeo fica em pé, quadrado ou deitado.',
+tpl:'Modelo do anúncio|Lista que abre ao tocar. Escolhe a roupa do anúncio: Clássico, Oferta, Minimalista ou Luxo.',
+logo:'Logo|Toque e escolha a figurinha da sua marca. Ela aparece no cantinho do vídeo.',
+prod:'Produto / marca|Caixinha de escrever. Escreva o nome do que você vende.',
+price:'Preço|Caixinha de escrever. Escreva o preço, como R$ 199. Ele aparece numa etiqueta no vídeo.',
+cta:'Chamada final|Caixinha de escrever. É o que o botão da última tela diz, como Compre agora.',
+col:'Cor da marca|Quadradinho de cor. Toque e escolha a cor da sua marca.',
+pav:'Personagens|Fileira de bonequinhos. Toque em um para ele entrar no vídeo. O escuro é o escolhido. Sem boneco tira ele.',
+pcol:'Cor da roupa|Quadradinho de cor. Pinta a roupa do boneco.',skin:'Cor da pele|Quadradinho de cor. Pinta a pele do boneco de gente.',hair:'Cor do cabelo|Quadradinho de cor. Pinta o cabelo do boneco de gente.',
+pgrid:'Posição do boneco|Uma grade de 9 quadradinhos que é a tela. Toque no quadradinho onde o boneco deve ficar: em cima, no meio ou embaixo.',
+avsz:'Tamanho|Barrinha de deslizar. Para a direita o boneco cresce, para a esquerda ele encolhe.',avop:'Opacidade|Barrinha de deslizar. Para a esquerda o boneco fica transparente como fantasma.',
+avmode:'Quando aparece|Lista que abre ao tocar. Escolha se o boneco aparece em todas as cenas, só nas marcadas ou só quando fala.',avgest:'Movimento e gestos|Lista que abre ao tocar. Do boneco parado até o bem animado, que mexe mãos e cabeça.',
+avwave:'Acenar ao entrar|Quadradinho de marcar. Com o ✓, o boneco dá tchau quando aparece.',avtest:'▶ Ver o boneco em ação|Toque para ver o boneco mexendo e falando um pouquinho.',
+anar:'Boneco narra sozinho|Quadradinho de marcar. Com o ✓, o boneco lê os textos em voz alta.',fitdur:'Ajustar duração à fala|Quadradinho de marcar. Com o ✓, a cena fica mais longa até a fala terminar.',
+vstyle:'Estilo de voz|Lista que abre ao tocar. Escolha voz de mulher, homem, criança, grave, robô e outras.',vsel:'Voz|Lista que abre ao tocar. Escolha uma voz do aparelho. As com ★ são as mais bonitas.',vrate:'Velocidade|Lista que abre ao tocar. Fala devagar, normal ou rápida.',
+vprov:'Serviço de voz|Lista que abre ao tocar. Voz do aparelho é grátis. As outras são vozes bem de gente, mas precisam de uma chave.',vkey:'Chave de acesso|Caixinha de escrever. Cole aqui a senha do serviço de voz. Ela fica só no seu aparelho.',
+vcv:'Voz do serviço|Lista que abre ao tocar. Escolhe qual voz do serviço vai falar.',vload:'Carregar minhas vozes|Toque para buscar as vozes da sua conta.',vctest:'🔊 Testar voz realista|Toque para ouvir um pedacinho da voz escolhida.',vkclr:'Apagar chave|Toque para esquecer a senha guardada.',
+say:'O que o boneco vai falar|Caixa de escrever. Escreva a frase que o boneco deve dizer.',vtest:'🔊 Testar voz|Toque para ouvir uma frase de teste.',saybtn:'🗣 Falar|Toque e o boneco fala o que você escreveu. Toque de novo para ele parar.',sayadd:'＋ Cena com este texto|Toque para criar uma cena nova com a frase escrita.',
+tlang:'Traduzir para|Lista que abre ao tocar. Escolha a língua: inglês, espanhol, francês e outras.',tbtn:'Traduzir textos|Toque e a IA troca todos os textos das cenas para a língua escolhida.',
+trlang:'Idioma da fala|Lista que abre ao tocar. Escolha a língua em que você vai falar.',trdest:'Onde usar o texto|Lista que abre ao tocar. Escolha para onde o texto escrito vai: pedido da IA, uma cena ou várias cenas.',trsc:'Cena de destino|Lista que abre ao tocar. Escolha qual cena recebe o texto.',
+trbtn:'🎤 Transcrever|Toque, deixe o microfone ligar e fale. O app escreve o que você disse. Toque de novo para parar.',trtxt:'Texto transcrito|Caixa onde as palavras aparecem. Você pode apagar ou corrigir.',truse:'Usar este texto|Toque para mandar o texto para o lugar escolhido.',trclr:'Limpar|Toque para apagar o texto da caixa.',
+clr:'Apagar dados|Toque para apagar tudo que o app guardou no aparelho: marca, pedidos e projetos.',
+tl:'Linha do tempo|Fileira de quadradinhos com miniaturas. Cada um é uma cena. Toque em um para escolher. O + no fim adiciona mais fotos ou vídeos.',
+tb:'Ferramentas|Fileira de botõezinhos que anda de lado: Texto, Recorte, Áudio, Voz, Legendas, Logo, Boneco e Ordem. Toque em um para ver os controles dele logo acima.',
+list:'Lista de cenas|Cada cena tem uma caixa para o texto, um número de segundos, e botões ↑ (sobe), ↓ (desce) e Remover (joga fora).',
+addb:'+ Fotos / vídeos|Toque e escolha fotos ou vídeos do celular. Cada um vira uma cena.',musb:'♪ Música|Toque e escolha uma música do celular para tocar no vídeo.',
+auto:'✨ Fazer tudo sozinho|Botão grande preto com brilho. Depois de por suas fotos, toque nele e o app escreve os títulos e arruma tudo.',
+cap:'Estilo legenda|Quadradinho de marcar. Com o ✓, as letras ficam menores e com contorno, como legenda de filme.',nar:'Narrar em voz alta|Quadradinho de marcar. Com o ✓, o app lê os textos quando você toca em Prévia.',
+mic:'Gravar minha voz|Quadradinho de marcar. Com o ✓, sua voz entra no vídeo quando você toca em Gerar vídeo.',vsnd:'Manter o som dos vídeos|Quadradinho de marcar. Com o ✓, o som do seu vídeo ou jogo continua.',
+fit:'Ajuste do vídeo|Lista que abre ao tocar. Preencher a tela corta as bordas. Caber inteiro mostra tudo com fundo borrado.',
+tcreq:'Pedido do cliente|Caixa grande no topo do Gestor de Tráfego. Cole ou escreva o que o cliente pediu.',tcgo:'Ativar ao criar|Quadradinho de marcar. Sem ✓, os anúncios ficam parados esperando você. Com ✓, começam a gastar dinheiro de verdade.',
+tcauto:'🚀 Criar e publicar tudo|Botão grande no cartão Piloto automático. Toque e o app lê o pedido, monta tudo, faz os vídeos e publica.',tcpub2:'📤 Só publicar|Botão ao lado. Publica o que já está pronto.',
+mtok:'Token Meta|Caixinha de senha. Cole aqui a senha que a Meta te deu.',mact:'Conta de anúncios|Caixinha de escrever. O número da sua conta, começando com act_.',mpg:'Página|Caixinha de escrever. O número da página do Facebook da empresa.',mhook:'Webhook|Caixinha de escrever. O endereço de um serviço que publica em outras redes. Pode deixar vazio.',msave:'Salvar conexões|Toque depois de preencher as caixinhas, para o app lembrar.',
+tcsel:'Cliente|Lista que abre ao tocar. Escolha de qual cliente você está cuidando.',tcnew:'+ Novo cliente|Toque para abrir uma ficha em branco.',tcdel:'Excluir|Toque para jogar fora o cliente escolhido. O app pergunta antes.',
+tcn:'Nome do cliente|Caixinha de escrever. O nome do negócio.',tcnicho:'Nicho|Caixinha de escrever. O ramo, como pizzaria ou advogado.',tcof:'Oferta|Caixa de escrever. O que o cliente quer vender.',tcpub:'Público e região|Caixinha de escrever. Quem vai ver e onde moram.',tcurl:'Link ou WhatsApp|Caixinha de escrever. Para onde a pessoa vai ao clicar.',
+tcbud:'Verba mensal|Caixinha de número. Quanto dinheiro o cliente gasta com anúncios por mês.',tcobj:'Objetivo|Lista que abre ao tocar. O que o cliente quer: vender, receber mensagens, visitas no site ou ser conhecido.',tcpl:'Onde anunciar|Botões de marcar: Meta, TikTok e Google. Marque as redes que quer.',
+tcdif:'Diferenciais e restrições|Caixa de escrever. O que a empresa tem de bom e o que não pode ser dito.',tcpr:'Ticket médio|Caixinha de número. Quanto o cliente ganha, em média, por venda.',tcav:'Boneco apresentador|Quadradinho de marcar. Com o ✓, um boneco fala nos vídeos.',
+tcgen:'✨ Gerar plano completo|Toque e a IA escreve o plano todo: onde anunciar, para quem, quanto gastar e os roteiros dos vídeos.',
+tmet:'Resultados|Caixa grande. Cole uma linha por anúncio: nome;gasto;impressoes;cliques;conversoes;receita.',topt:'Analisar resultados|Toque e o app diz: pare este, gaste mais neste, teste outro.',trel:'📝 Relatório|Toque e a IA escreve um resumo fácil para o cliente ler.',
+tcplan:'Plano|Cartões que aparecem depois de gerar o plano. Em cada vídeo: Abrir no estúdio, ⏺ Gerar vídeo e Copiar textos. No topo: Criar TODOS os vídeos, Copiar pacote e Baixar.',
+pjn:'Nome do projeto|Caixinha de escrever. Dê um nome ao seu trabalho.',pjs:'Salvar projeto|Toque para guardar o que você fez.',pjl:'Meus projetos|Lista dos guardados. Abrir traz de volta. Excluir joga fora.',
+pcat:'Categoria|Lista que abre ao tocar. Que tipo de pedido é.',pdev:'Aparelho|Lista que abre ao tocar. Qual aparelho você usa.',ptx:'Descrição|Caixa de escrever. Conte sua ideia ou o problema.',psend:'Enviar pedido|Toque para mandar o pedido.',pcopy:'Copiar lista|Toque para copiar todos os pedidos.',tustart:'▶ Tour guiado|Toque para um passeio por todo o app.',
+cnm:'Nome do negócio|Caixinha de escrever. Escreva o nome da sua empresa.',cnich:'Ramo|Caixinha de escrever. O que sua empresa faz.',cof:'O que divulgar|Caixa de escrever. O que você quer que as pessoas comprem.',cpub:'Cidade e público|Caixinha de escrever. Onde ficam e quem são seus clientes.',curl2:'WhatsApp ou link|Caixinha de escrever. Para onde o cliente vai quando clicar.',
+cbud:'Verba por mês|Caixinha de número. Quanto dinheiro você quer gastar com anúncios por mês.',cobj:'Objetivo|Lista que abre ao tocar. O que você quer: vender, receber contatos, visitas ou ser conhecido.',cdif:'Diferenciais e evitar|Caixa de escrever. O que sua empresa tem de bom e o que não pode ser dito.',
+ccol:'Cor da marca|Quadradinho de cor. Escolha a cor da sua empresa.',clogo:'Logo|Toque e escolha a figurinha da sua marca.',cgo:'Ativar ao publicar|Quadradinho de marcar. Sem ✓, os anúncios ficam parados esperando você olhar.',
+cgobtn:'🚀 Enviar e criar tudo|Botão grande. Toque e a IA faz o perfil, os vídeos e os anúncios.',csend:'📨 Enviar meus dados|Botão grande. Toque para mandar suas respostas ao estúdio.',clink:'Link do cliente|Caixa com o endereço do formulário. Mande esse endereço ao cliente.',ccopy:'Copiar link|Toque para copiar o endereço.',crefresh:'Atualizar pedidos|Toque para ver os formulários novos.',crecv:'Pedidos recebidos|Lista com os formulários. Em cada um, o botão Criar tudo faz o trabalho todo.'});
+$('#hall').innerHTML='<p><b>Dica:</b> toque no botão 🔎 Explicar botões, no canto da tela, e depois em qualquer coisa. Eu conto o que ela faz e onde ela fica. Aqui está a lista de tudo:</p>'+Object.keys(HELP).filter(k=>k!=='mhelp').map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+const KT=[
+['#hubh','Vamos começar!','Esta é a Central, a tela inicial. Cada cartão grande é uma porta. Toque em um para entrar. Toque em Próximo e eu mostro cada porta.','home'],
+['#req','Passo 1: conte sua ideia','Escreva aqui, na caixa grande, o vídeo que você quer. Embaixo tem O que evitar, Estilo visual e Imagem inicial. Todos são só caixinhas para preencher.','ia'],
+['#pdur','Passo 2: tamanho do vídeo','Toque em 20 s, 30 s ou 40 s para o tempo. Toque em 16:9, 9:16 ou 1:1 para o formato. Depois escolha Tipo, Tom, Cenas e Boneco nas listas logo abaixo.','ia'],
+['#ia','Passo 3: criar com IA','Toque neste botão grande e espere. A IA escreve a história e monta as cenas.','ia'],
+['#addb','Passo 4: suas fotos e músicas','No cartão Cenas, toque em + Fotos / vídeos para escolher do celular e em ♪ Música para por uma canção. Cada cena depois tem texto, segundos, ↑, ↓ e Remover.','ia'],
+['#auto','Passo 5: botão mágico','Toque em Fazer tudo sozinho e o app escreve os títulos para você.','ia'],
+['#cap','Passo 6: quadradinhos de marcar','Legenda, Narrar, Gravar minha voz e Manter o som. Toque para por ou tirar o ✓. A lista Ajuste do vídeo muda como ele cabe na tela.','ia'],
+['#tl','Passo 7: linha do tempo','Cada quadradinho é uma cena. Toque em um para escolher. O + adiciona mais.','editor'],
+['#tb','Passo 8: ferramentas','Deslize de lado. Texto muda a frase. Recorte muda o tempo. Áudio põe música. Voz narra. Legendas muda as letras. Logo põe a marca. Boneco põe o bonequinho. Ordem troca de lugar.','editor'],
+['#bp','Passo 9: ver e gerar','▶ Prévia toca o vídeo. A barra de tempo anda por ele. ⏺ Gerar vídeo faz o arquivo de verdade. No fim, toque em Salvar vídeo.','editor'],
+['#mode','Anúncios','Aqui você diz se é Anúncio ou Clipe, escolhe formato e modelo, manda o logo e escreve produto, preço, chamada final e cor.','anuncios'],
+['#pav','Personagens','Toque em um bonequinho para ele entrar no vídeo. Embaixo estão as cores de roupa, pele e cabelo.','personagens'],
+['#pgrid','Onde o boneco fica','A grade de 9 quadradinhos é a tela. Toque no lugar que você quer. Depois tem tamanho, transparência, quando aparece, movimento, acenar e o botão ▶ Ver o boneco em ação.','personagens'],
+['#anar','Voz do boneco','Marque para ele falar sozinho. Escolha estilo, voz e velocidade nas listas.','personagens'],
+['#vprov','Voz de gente de verdade','Escolha um serviço, cole a chave, toque em Carregar minhas vozes, teste e, se quiser, Apagar chave.','personagens'],
+['#say','Fazer o boneco falar','Escreva a frase e toque em 🗣 Falar. 🔊 Testar voz toca um exemplo. ＋ Cena cria uma cena com a frase.','personagens'],
+['#vsnd','Games','Para gravações de jogo: adicione o vídeo, marque Manter o som e use Caber inteiro se ele for deitado.','games'],
+['#tbtn','Voz e legendas','Traduzir textos troca a língua. 🎤 Transcrever escreve o que você fala. Usar este texto manda para a cena.','voz'],
+['#cgobtn','Portal do cliente','O cliente preenche as caixinhas e toca em Enviar. A IA faz perfil, vídeos e anúncios. De longe, ele usa 📨 Enviar meus dados.','cliente'],
+['#tcauto','Piloto automático','Cole o pedido do cliente e toque em Criar e publicar tudo. É o botão mais mágico do app.','trafego'],
+['#msave','Conexões','Cole token, conta e página da Meta e toque em Salvar conexões. É como dar a chave de casa para o app.','trafego'],
+['#tcgen','Ficha e plano','Preencha a ficha do cliente e toque em Gerar plano completo. Em cada vídeo do plano há Abrir no estúdio, Gerar vídeo e Copiar textos.','trafego'],
+['#topt','Ver se deu certo','Cole os números, toque em Analisar resultados e veja o que pausar, aumentar ou testar. 📝 Relatório escreve para o cliente.','trafego'],
+['#pjs','Meus projetos','Escreva um nome e toque em Salvar projeto. Depois, na lista, toque em Abrir.','projetos'],
+['#psend','Pedir uma novidade','Escolha categoria e aparelho, escreva a ideia e toque em Enviar pedido.','pedidos'],
+['#tustart','Tutoriais','Aqui você refaz este passeio e lê o Guia de todos os botões.','tutoriais'],
+['#clr','Configurações','Apagar dados limpa tudo que o app guardou no aparelho.','config'],
+['#hubh','Pronto!','Você viu tudo. Para saber o que um botão faz, ligue o 🔎 Explicar botões e toque nele.','home']];
+TS.length=0;KT.forEach(k=>{const q=k[0];TS.push([()=>$(q).closest?($(q).closest('.card')&&['#mode'].includes(q)?$(q).closest('.card'):$(q)):$(q),k[1],k[2],k[3]])});
+
+/* ===== Revisão, aprovação, segmentação e resultados ===== */
+const MK=['mtok','mact','mpg','mmhook','mage1','mage2','mcity'];
+['mage1','mage2','mcity'].forEach(k=>{if(TCN[k])$('#'+k).value=TCN[k]});
+$('#msave').onclick=()=>{['mtok','mact','mpg','mhook','mage1','mage2','mcity'].forEach(k=>TCN[k]=$('#'+k).value.trim());try{localStorage.setItem('trfconn',JSON.stringify(TCN))}catch(e){}$('#mmsg').textContent='Conexões salvas neste aparelho.'};
+const GV='https://graph.facebook.com/v21.0/';
+$('#mtest').onclick=async()=>{$('#msave').click();const m=$('#mmsg'),T=TCN.mtok;if(!T||!TCN.mact){m.textContent='Preencha token e conta primeiro.';return}m.textContent='Testando…';
+try{const A=TCN.mact.startsWith('act_')?TCN.mact:'act_'+TCN.mact,d=(await(await fetch(GV+'debug_token?input_token='+T+'&access_token='+T)).json()).data||{};
+const a=await(await fetch(GV+A+'?fields=name,currency,account_status&access_token='+T)).json();
+if(a.error)throw new Error(a.error.message);if(d.expires_at){TCN.mexp=d.expires_at;try{localStorage.setItem('trfconn',JSON.stringify(TCN))}catch(e){}}
+m.textContent='Conta: '+a.name+' ('+a.currency+') · '+(a.account_status===1?'ativa':'status '+a.account_status)+' · Token '+(d.is_valid===false?'INVÁLIDO':d.expires_at?'vale até '+new Date(d.expires_at*1000).toLocaleDateString('pt-BR'):'sem validade')}
+catch(e){m.textContent='Falhou: '+e.message}};
+async function tgt(T){let geo={countries:['BR']};const cs=(TCN.mcity||'').split(',').map(x=>x.trim()).filter(Boolean),ks=[];
+for(const q of cs){try{const j=await(await fetch(GV+'search?type=adgeolocation&location_types=%5B%22city%22%5D&country_code=BR&limit=1&q='+encodeURIComponent(q)+'&access_token='+T)).json();if(j.data&&j.data[0])ks.push({key:j.data[0].key})}catch(e){}}
+if(ks.length)geo={cities:ks};return{geo_locations:geo,age_min:+TCN.mage1||18,age_max:+TCN.mage2||65,targeting_automation:{advantage_audience:1}}}
+async function tReview(){const c=tCur();if(!c||!c.plan)return;$('#tcst').textContent='Revisando as regras dos anúncios…';
+const tx=tList(c.plan.plataformas).map(p=>p.nome+': '+tList(p.criativos).map(x=>[x.gancho,x.texto_principal,x.titulo,x.descricao].concat(tList(x.cenas).map(y=>y.texto)).join(' / ')).join(' || ')).join('\n');
+try{const r=await trfAI('Você é revisor de políticas de anúncios (Meta, TikTok, Google) no Brasil. Nicho: '+(c.tcnicho||'-')+'. Revise os textos e aponte: promessa de resultado garantido, antes e depois, alegações de saúde ou estética, ataque a atributos pessoais, sensacionalismo, direitos autorais. Textos:\n'+tx+'\nResponda SOMENTE JSON: {"aprovado":true,"itens":[{"onde":"","problema":"","sugestao":"","risco":"alto|medio|baixo"}]}');c.rev=r}catch(e){c.rev=null}
+tS();tRevShow();$('#tcst').textContent='Plano pronto! Role para baixo para ver tudo.'}
+function tRevShow(){const b=$('#trev');b.innerHTML='';const c=tCur(),r=c&&c.rev;if(!r)return;const it=tList(r.itens),k=tE('div',{className:'card'});
+k.append(tE('h2',{textContent:'🛡️ Revisão das regras dos anúncios'}),tE('div',{textContent:it.length?it.length+' ponto(s) para olhar antes de publicar:':'Nenhum problema encontrado pela IA. Mesmo assim, leia tudo antes de ativar.'}));
+it.forEach(x=>k.append(tE('div',{className:'cr',style:'margin-top:6px'},[tE('b',{textContent:({alto:'🔴',medio:'🟡',baixo:'🟢'}[x.risco]||'🟡')+' '+(x.onde||'')}),tE('div',{textContent:x.problema||''}),tE('div',{className:'mu',textContent:'Sugestão: '+(x.sugestao||'')})])));b.append(k)}
+const _tp=tPlan;tPlan=function(){_tp();tRevShow()};
+const _tg=$('#tcgen').onclick;$('#tcgen').onclick=async()=>{await _tg();if(tCur()&&tCur().plan)await tReview()};
+const _tP=tPub;tPub=async function(){const c=tCur();if(!c||!c.plan)return _tP();
+const it=tList(c.rev&&c.rev.itens),al=it.filter(x=>x.risco==='alto').length,tot=tList(c.plan.plataformas).reduce((a,p)=>a+(+p.orcamento_diario||0),0),nv=Object.keys(TV).filter(k=>k.startsWith(c.id+'|')).length;
+const msg='Publicar para '+(c.tcn||'o cliente')+'?\n\nRedes: '+c.plan.plataformas.map(p=>p.nome).join(', ')+'\nVerba diária: '+brl(tot)+'\nVídeos prontos: '+nv+'\nAnúncios: '+($('#tcgo').checked?'ATIVOS (vão gastar dinheiro)':'pausados para você revisar')+'\nRevisão de regras: '+(c.rev?al+' risco(s) alto(s), '+it.length+' ponto(s)':'não feita')+(al?'\n\nATENÇÃO: há riscos altos. Corrija antes de ativar.':'')+((TCN.mexp&&TCN.mexp*1000-Date.now()<2592e5)?'\n\nO token da Meta expira em breve.':'')+'\n\nContinuar?';
+if(!confirm(msg)){plog('Publicação cancelada por você.');return}return _tP()};
+$('#tpull').onclick=async()=>{const c=tCur(),m=$('#tout');if(!TCN.mtok||!TCN.mact){m.textContent='Conecte a Meta em Conexões primeiro.';return}m.textContent='Buscando resultados dos últimos 7 dias…';
+try{const A=TCN.mact.startsWith('act_')?TCN.mact:'act_'+TCN.mact,j=await(await fetch(GV+A+'/insights?level=ad&date_preset=last_7d&limit=100&fields=campaign_name,ad_name,spend,impressions,inline_link_clicks,actions,action_values&access_token='+TCN.mtok)).json();
+if(j.error)throw new Error(j.error.message);const re=/purchase|lead|messaging_conversation_started|contact/,sm=(a,t)=>tList(a).filter(x=>re.test(x.action_type)).reduce((n,x)=>n+(+x.value||0),0);
+let d=(j.data||[]);if(c&&c.tcn)d=d.filter(x=>(x.campaign_name||'').includes(c.tcn));
+if(!d.length){m.textContent='Nenhum resultado encontrado para este cliente nos últimos 7 dias.';return}
+$('#tmet').value=d.map(x=>[x.ad_name,x.spend,x.impressions,x.inline_link_clicks||0,sm(x.actions),sm(x.action_values)].join(';')).join('\n');tRead();$('#topt').click()}
+catch(e){m.textContent='Não consegui buscar: '+e.message}};
+Object.assign(HELP,{mage1:'Idade mínima|Caixinha de número. A pessoa mais nova que vai ver o anúncio.',mage2:'Idade máxima|Caixinha de número. A pessoa mais velha que vai ver o anúncio.',mcity:'Cidades|Caixinha de escrever. Escreva as cidades separadas por vírgula. Vazia, o anúncio aparece no Brasil todo.',mtest:'Testar conexão|Toque para ver se o token funciona, qual é a conta e até quando o token vale.',tpull:'⬇ Puxar da Meta|Toque e o app busca sozinho os números dos últimos 7 dias e já analisa, sem você colar nada.',trev:'Revisão das regras|Cartão que aparece depois do plano. A IA aponta frases que as redes podem barrar. 🔴 é grave, 🟡 médio, 🟢 leve.'});
+$('#hall').innerHTML+=['mage1','mage2','mcity','mtest','tpull','trev'].map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+
+/* ===== Autoteste, consentimento, antispam e aviso de pedidos ===== */
+$('#atest').onclick=async()=>{const o=$('#atout');o.innerHTML='Testando…';const R=[];const add=(ok,n,d)=>R.push((ok===true?'✅ ':ok===false?'❌ ':'⚠️ ')+n+(d?' — '+d:''));
+const mp=window.MediaRecorder&&MediaRecorder.isTypeSupported('video/mp4');
+add(!!(window.MediaRecorder&&cv.captureStream),'Gravar vídeo','sem isso o app não gera vídeo. Use Chrome ou Safari atualizado');
+add(mp?true:null,'Formato .mp4',mp?'a Meta aceita':'grava .webm; a Meta pode recusar. Converta em outro programa antes de subir');
+add(TTS_OK?true:null,'Voz do aparelho',TTS_OK?'':'sem voz sintética; use voz realista ou grave a sua');
+add(SRC?true:null,'Transcrição por microfone',SRC?'':'indisponível neste navegador');
+let ai=false;try{ai=!!(await claude.use('sample'))}catch(e){}add(ai,'Modo IA',ai?'':(window.aiWhy||'necessário para plano, perfil e revisão'));
+add(!!(await getDb())?true:null,'Servidor compartilhado',(await getDb())?'':'configure o Firebase em BACKEND para receber pedidos de clientes');
+let ls=false;try{localStorage.setItem('_t','1');localStorage.removeItem('_t');ls=true}catch(e){}add(ls,'Guardar dados no aparelho',ls?'':'marca, clientes e projetos não serão salvos');
+if(TCN.mtok&&TCN.mact){try{const A=TCN.mact.startsWith('act_')?TCN.mact:'act_'+TCN.mact,a=await(await fetch(GV+A+'?fields=name&access_token='+TCN.mtok)).json();add(!a.error,'Conexão com a Meta',a.error?a.error.message:'conta '+a.name)}catch(e){add(false,'Conexão com a Meta','bloqueada pela rede ou navegador')}}else add(null,'Conexão com a Meta','ainda não configurada');
+o.innerHTML=R.map(x=>'<div>'+x.replace(/</g,'&lt;')+'</div>').join('')+'<details><summary><b>Roteiro de teste da publicação</b></summary><p>1) Use uma conta de anúncios de teste ou com saldo baixo. 2) Em Conexões, preencha e toque em Testar conexão. 3) No Portal do cliente, preencha um cliente de mentira com verba pequena. 4) Toque em Enviar e criar tudo e deixe a tela aberta. 5) Na confirmação, deixe os anúncios pausados. 6) Abra o Gerenciador de Anúncios da Meta e confira campanha, conjunto, vídeo e texto. 7) Se algo falhar, copie a mensagem do andamento e me mande.</p></details>'};
+(function(){const _cs=$('#csend').onclick,m=()=>$('#cprog');
+$('#csend').onclick=async()=>{if(!$('#ccons').checked){m().textContent='Marque a caixinha de concordância (LGPD) para enviar.';return}
+if($('#chp').value){m().textContent='Enviado! Obrigado.';return}
+let h=[];try{h=JSON.parse(localStorage.getItem('cenv')||'[]').filter(t=>Date.now()-t<864e5)}catch(e){}
+if(h.length&&Date.now()-h[h.length-1]<6e4){m().textContent='Aguarde um minuto antes de enviar de novo.';return}
+if(h.length>=3){m().textContent='Limite de 3 envios por dia neste aparelho.';return}
+await _cs();if((m().textContent||'').startsWith('Enviado')){h.push(Date.now());try{localStorage.setItem('cenv',JSON.stringify(h))}catch(e){}}}})();
+function setBadge(n){const sp=document.querySelector('#mlist .mi span');if(sp)sp.textContent=n?n+' pedido(s) novo(s) de clientes':'O cliente preenche e a IA faz tudo.'}
+async function cBadge(){try{const db=await getDb();if(!db)return;const sn=await db.collection('clientes').orderBy('ts','desc').limit(50).get(),dn=cDone();setBadge(sn.docs.map(d=>d.data()).filter(x=>!dn.includes(x.ts)).length)}catch(e){}}
+const _lr=loadRecv;loadRecv=async function(){await _lr();cBadge()};
+if(!document.body.classList.contains('cm'))cBadge();
+Object.assign(HELP,{atest:'🧪 Testar tudo|Fica em Configurações. Toque e o app confere sozinho se grava vídeo, tem voz, IA, servidor e Meta funcionando, e mostra um roteiro de teste.',ccons:'Concordo (LGPD)|Quadradinho de marcar. Obrigatório para enviar: é o jeito de a pessoa autorizar o uso dos dados dela.'});
+$('#hall').innerHTML+=['atest','ccons'].map(k=>'<p><b>'+hname(k)+'</b> — '+htxt(k)+'</p>').join('');
+
+/* ===== Diagnóstico da IA e renovação do acesso ===== */
+(async()=>{if(!window.claude||!claude.use){window.aiWhy=window.aiWhyDefault;return}
+try{if(!(await claude.use('sample')))window.aiWhy=window.aiWhyDefault}catch(e){window.aiWhy='Falha ao carregar a IA.'}})();
+$('#crenew').onclick=async()=>{pdb=null;$('#crecv').textContent='Renovando o acesso…';const d=await getDb();if(!d){$('#crecv').textContent='Acesso não concedido. Toque de novo e aceite o pedido de permissão, ou confira se você é Editor do app.';return}loadRecv()};
+Object.assign(HELP,{crenew:'Renovar acesso|Toque se a lista de pedidos parar de carregar. O app pede de novo a permissão do servidor compartilhado.'});
+$('#hall').innerHTML+='<p><b>Renovar acesso</b> — '+htxt('crenew')+'</p>';
+
+go(location.hash.slice(1)||'home',true);
+try{if(!localStorage.getItem('tutok3')&&location.hash!=='#enviar')showT(0)}catch(e){showT(0)}
+</script></body></html>
